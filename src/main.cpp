@@ -2,13 +2,10 @@
 #include "headers/sdl_controller.h"
 #include "headers/main.h"
 
-void sdl_init(void);
-void sdl_destroy(void);
-
 int main(int argc, char **argv)
 {
     hide_console();
-    sdl_init();
+    sdl.init();
 
     bool running = true;
     while (running)
@@ -27,6 +24,6 @@ int main(int argc, char **argv)
             }
         }
     }
-    sdl_destroy();
+    sdl.destroy();
     return 0;
 }
