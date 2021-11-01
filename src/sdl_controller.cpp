@@ -8,11 +8,14 @@ void sdl_destroy_image(void);
 void sdl_destroy(void);
 SDL_Renderer *renderer;
 SDL_Window *window;
+SDL_Surface *icon_surface;
 void init_sdl_mixer();
 void sdl_destroy_mixer();
 void sdl_ttf_init();
 void sdl_ttf_destroy();
 void load_font(TTF_Font *font);
+void sdl_init_window_icon(SDL_Window *window);
+void sdl_destroy_window_icon();
 
 void sdl_init(void)
 {
@@ -38,6 +41,9 @@ void sdl_init(void)
     sdl_init_image();
     init_sdl_mixer();
     sdl_ttf_init();
+
+    sdl_init_window_icon(window);
+
     TTF_Font *f;
     load_font(f);
 }
@@ -49,6 +55,7 @@ void sdl_destroy()
     sdl_ttf_destroy();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    sdl_destroy_window_icon();
 }
 
 void sdl_init_image()
@@ -108,3 +115,14 @@ void load_font(TTF_Font *font)
 }
 
 // TTF_CloseFont(font);
+
+void sdl_init_window_icon(SDL_Window *window)
+{
+    icon_surface = IMG_Load(WINDOW_ICON);
+    SDL_SetWindowIcon(window, icon_surface);
+}
+
+void sdl_destroy_window_icon()
+{
+    SDL_FreeSurface(icon_surface);
+}
