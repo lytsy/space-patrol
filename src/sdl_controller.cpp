@@ -12,6 +12,7 @@ void init_sdl_mixer();
 void sdl_destroy_mixer();
 void sdl_ttf_init();
 void sdl_ttf_destroy();
+void load_font(TTF_Font *font);
 
 void sdl_init(void)
 {
@@ -37,6 +38,8 @@ void sdl_init(void)
     sdl_init_image();
     init_sdl_mixer();
     sdl_ttf_init();
+    TTF_Font *f;
+    load_font(f);
 }
 
 void sdl_destroy()
@@ -95,15 +98,13 @@ void sdl_ttf_destroy()
     TTF_Quit();
 }
 
-TTF_Font *load_font()
+void load_font(TTF_Font *font)
 {
-    TTF_Font *font;
     font = TTF_OpenFont("assets/fonts/sans.ttf", 16);
     if (!font)
     {
         printf("Failed TTF_OpenFont: %s\n", TTF_GetError());
     }
-    return font;
 }
 
 // TTF_CloseFont(font);
