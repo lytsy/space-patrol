@@ -1,9 +1,8 @@
 
-#include "headers/sdl_controller.h"
 #include <stdio.h>
-#define WINDOW_WIDTH 720
-#define WINDOW_HEIGHT 480
-#define WINDOW_TITLE "MyApp"
+#include "headers/sdl_controller.h"
+#include "headers/config.h"
+
 void sdl_init_image(void);
 void sdl_destroy_image(void);
 void sdl_destroy(void);
@@ -14,31 +13,30 @@ void sdl_destroy_mixer();
 void sdl_ttf_init();
 void sdl_ttf_destroy();
 
-int sdl_init(void)
+void sdl_init(void)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
-        printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
+        printf("Failed SDL_Init.\nSDL Error: '%s'\n", SDL_GetError());
+        exit(1);
     }
 
     SDL_Window *window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE);
     if (!window)
     {
-        printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
+        printf("Failed SDL_CreateWindow.\nSDL Error: '%s'\n", SDL_GetError());
+        exit(1);
     }
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     if (!renderer)
     {
-        printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
+        printf("Failed SDL_CreateRenderer.\nSDL Error: '%s'\n", SDL_GetError());
+        exit(1);
     }
     sdl_init_image();
     init_sdl_mixer();
     sdl_ttf_init();
-    return 0;
 }
 
 void sdl_destroy()
@@ -66,8 +64,7 @@ void init_sdl_mixer()
     int initted = Mix_Init(flags);
     if (initted & flags != flags)
     {
-        printf("Mix_Init: Failed to init required ogg and mod support!\n");
-        printf("Mix_Init: %s\n", Mix_GetError());
+        printf("Failed Mix_Init.\nSDL Error: '%s'\n", Mix_GetError());
     }
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
     {
@@ -97,3 +94,16 @@ void sdl_ttf_destroy()
 {
     TTF_Quit();
 }
+
+TTF_Font *load_font()
+{
+    TTF_Font *font;
+    font = TTF_OpenFont("assets/fonts/sans.ttf", 16);
+    if (!font)
+    {
+        printf("Failed TTF_OpenFont: %s\n", TTF_GetError());
+    }
+    return font;
+}
+
+// TTF_CloseFont(font);
