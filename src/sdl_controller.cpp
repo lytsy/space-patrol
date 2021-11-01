@@ -9,6 +9,8 @@ void sdl_destroy_image(void);
 void sdl_destroy(void);
 SDL_Renderer *renderer;
 SDL_Window *window;
+void init_sdl_mixer();
+void sdl_destroy_mixer();
 
 int sdl_init(void)
 {
@@ -32,6 +34,7 @@ int sdl_init(void)
         return 1;
     }
     sdl_init_image();
+    init_sdl_mixer();
     return 0;
 }
 
@@ -40,6 +43,7 @@ void sdl_destroy()
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     sdl_destroy_image();
+    sdl_destroy_mixer();
 }
 
 void sdl_init_image()
@@ -50,4 +54,28 @@ void sdl_init_image()
 void sdl_destroy_image()
 {
     IMG_Quit();
+}
+
+void init_sdl_mixer()
+{
+    int flags = MIX_INIT_MP3 | MIX_INIT_OGG | MIX_INIT_MOD;
+    int initted = Mix_Init(flags);
+    if (initted & flags != flags)
+    {
+        printf("Mix_Init: Failed to init required ogg and mod support!\n");
+        printf("Mix_Init: %s\n", Mix_GetError());
+    }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1)
+    {
+        printf("Couldn't initialize SDL Mixer\n");
+        exit(1);
+    }
+
+    Mix_AllocateChannels(8);
+}
+
+void sdl_destroy_mixer()
+{
+    Mix_CloseAudio();
+    Mix_Quit();
 }
