@@ -1,6 +1,7 @@
 
 #include "headers/sdl_controller.h"
 int sdl_init(void);
+void sdl_destroy(void);
 
 int main(int argc, char **argv)
 {
@@ -23,5 +24,6 @@ int main(int argc, char **argv)
             }
         }
     }
+    sdl_destroy();
     return 0;
 }

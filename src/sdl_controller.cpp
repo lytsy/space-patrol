@@ -4,6 +4,11 @@
 #define WINDOW_WIDTH 720
 #define WINDOW_HEIGHT 480
 #define WINDOW_TITLE "MyApp"
+void sdl_init_image(void);
+void sdl_destroy_image(void);
+void sdl_destroy(void);
+SDL_Renderer *renderer;
+SDL_Window *window;
 
 int sdl_init(void)
 {
@@ -26,5 +31,23 @@ int sdl_init(void)
         printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
         return 1;
     }
+    sdl_init_image();
     return 0;
+}
+
+void sdl_destroy()
+{
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    sdl_destroy_image();
+}
+
+void sdl_init_image()
+{
+    IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
+}
+
+void sdl_destroy_image()
+{
+    IMG_Quit();
 }
