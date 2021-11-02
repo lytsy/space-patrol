@@ -94,6 +94,7 @@ private:
         }
 
         Mix_AllocateChannels(8);
+        Mix_VolumeMusic(MIX_MAX_VOLUME * WINDOW_VOLUME);
     }
     void _init_sdl_window_icon()
     {
