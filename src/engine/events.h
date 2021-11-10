@@ -5,7 +5,7 @@ void keydown_handler(SDL_Scancode key_code);
 void keyup_handler(SDL_Scancode key_code);
 void click_handler(SDL_MouseButtonEvent event);
 
-void SDL_events()
+void SDL_events(bool *running)
 {
     SDL_Event event;
 
@@ -14,7 +14,7 @@ void SDL_events()
 
         if (event.type == SDL_QUIT)
         {
-            exit(0);
+            *running = false;
         }
         else if (event.type == SDL_KEYDOWN && event.key.repeat == 0)
         {

@@ -4,8 +4,10 @@
 #include "../../vendor/sdl_mixer/include/SDL2/SDL_mixer.h"
 #include "../../vendor/sdl_ttf/include/SDL2/SDL_ttf.h"
 #include <stdio.h>
+
 #include "config.h"
 #include "console.h"
+#include "events.h"
 
 class Engine
 {
@@ -14,8 +16,11 @@ public:
     SDL_Window *window;
     TTF_Font *font;
     SDL_Surface *icon_surface;
+    bool running;
+
     void init()
     {
+        running = true;
         hide_console();
         _init_sdl();
         _init_sdl_window();
@@ -24,30 +29,24 @@ public:
         _init_sdl_mixer();
         _init_sdl_ttf();
         _init_sdl_window_icon();
-        load_font();
+        _load_font();
     };
+
     void destroy()
     {
-        _destroy_sdl_image();
-        _destroy_sdl_mixer();
+        _destroy_font();
+        _destroy_sdl_window_icon();
         _destroy_sdl_ttf();
+        _destroy_sdl_mixer();
+        _destroy_sdl_image();
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
-        _destroy_sdl_window_icon();
-        destroy_font(font);
     };
-    void load_font()
+
+    void handle_events()
     {
-        font = TTF_OpenFont(WINDOW_FONT, WINDOW_FONT_SIZE);
-        if (!font)
-        {
-            printf("Failed TTF_OpenFont: %s\n", TTF_GetError());
-        }
+        SDL_events(&running);
     }
-    void destroy_font(TTF_Font *font)
-    {
-        TTF_CloseFont(font);
-    };
 
 private:
     void _init_sdl(void)
@@ -59,6 +58,7 @@ private:
             exit(1);
         }
     }
+
     void _init_sdl_window()
     {
         window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE);
@@ -68,6 +68,7 @@ private:
             exit(1);
         }
     };
+
     void _init_sdl_renderer()
     {
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
@@ -77,10 +78,12 @@ private:
             exit(1);
         }
     };
+
     void _init_sdl_image()
     {
         IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG);
     }
+
     void _init_sdl_mixer()
     {
         int flags = MIX_INIT_MP3 | MIX_INIT_OGG | MIX_INIT_MOD;
@@ -98,11 +101,13 @@ private:
         Mix_AllocateChannels(8);
         Mix_VolumeMusic(MIX_MAX_VOLUME * WINDOW_VOLUME);
     }
+
     void _init_sdl_window_icon()
     {
         icon_surface = IMG_Load(WINDOW_ICON);
         SDL_SetWindowIcon(window, icon_surface);
     }
+
     void _init_sdl_ttf()
     {
         if (TTF_Init() == -1)
@@ -111,19 +116,37 @@ private:
             exit(1);
         }
     }
+
+    void _load_font()
+    {
+        font = TTF_OpenFont(WINDOW_FONT, WINDOW_FONT_SIZE);
+        if (!font)
+        {
+            printf("Failed TTF_OpenFont: %s\n", TTF_GetError());
+        }
+    }
+
     void _destroy_sdl_image()
     {
         IMG_Quit();
     }
+
     void _destroy_sdl_mixer()
     {
         Mix_CloseAudio();
         Mix_Quit();
     }
+
     void _destroy_sdl_ttf()
     {
         TTF_Quit();
     }
+
+    void _destroy_font()
+    {
+        TTF_CloseFont(font);
+    };
+
     void _destroy_sdl_window_icon()
     {
         SDL_FreeSurface(icon_surface);
