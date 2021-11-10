@@ -4,11 +4,9 @@
 #include "engine/image.h"
 #include "engine/text.h"
 #include "engine/events.h"
-#include "engine/main.h"
 
 int main(int argc, char **argv)
 {
-    hide_console();
     sdl.init();
 
     Sound test_sound("assets/sound.mp3");

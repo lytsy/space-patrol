@@ -1,1 +1,0 @@
-void hide_console();

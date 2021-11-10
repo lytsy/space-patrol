@@ -5,6 +5,7 @@
 #include "../../vendor/sdl_ttf/include/SDL2/SDL_ttf.h"
 #include <stdio.h>
 #include "config.h"
+#include "console.h"
 
 class Engine
 {
@@ -15,6 +16,7 @@ public:
     SDL_Surface *icon_surface;
     void init()
     {
+        hide_console();
         _init_sdl();
         _init_sdl_window();
         _init_sdl_renderer();
