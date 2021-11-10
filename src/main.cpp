@@ -20,6 +20,7 @@ int main(int argc, char **argv)
     {
         engine.handle_events();
         engine.render_clear();
+        engine.check_errors();
 
         test_img.draw();
         test_text.draw();

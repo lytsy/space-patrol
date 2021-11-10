@@ -58,7 +58,18 @@ public:
         SDL_RenderPresent(renderer);
     }
 
+    void check_errors()
+    {
+        error = (char *)SDL_GetError();
+        if (strlen(error) != 0)
+        {
+            printf("SDL Error: %s\n", error);
+            SDL_ClearError();
+        }
+    }
+
 private:
+    char *error;
     void _init_sdl(void)
     {
 
