@@ -3,6 +3,7 @@
 #include "headers/sdl_sound.h"
 #include "headers/sdl_image.h"
 #include "headers/sdl_text.h"
+#include "headers/sdl_events.h"
 #include "headers/main.h"
 
 int main(int argc, char **argv)
@@ -22,19 +23,7 @@ int main(int argc, char **argv)
     bool running = true;
     while (running)
     {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-            case SDL_QUIT:
-                running = false;
-                break;
-
-            default:
-                break;
-            }
-        }
+        SDL_events();
 
         SDL_RenderClear(sdl.renderer);
         test_img.draw();
