@@ -22,7 +22,7 @@ public:
         _init_sdl_mixer();
         _init_sdl_ttf();
         _init_sdl_window_icon();
-        load_font(font);
+        load_font();
     };
     void destroy()
     {
@@ -34,7 +34,7 @@ public:
         _destroy_sdl_window_icon();
         destroy_font(font);
     };
-    void load_font(TTF_Font *font)
+    void load_font()
     {
         font = TTF_OpenFont(WINDOW_FONT, WINDOW_FONT_SIZE);
         if (!font)

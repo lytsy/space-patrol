@@ -2,6 +2,7 @@
 #include "headers/sdl_controller.h"
 #include "headers/sdl_sound.h"
 #include "headers/sdl_image.h"
+#include "headers/sdl_text.h"
 #include "headers/main.h"
 
 int main(int argc, char **argv)
@@ -15,6 +16,8 @@ int main(int argc, char **argv)
 
     SDL_Img test_img("assets/test_img.png", sdl.renderer);
     test_img.set_dest(20, 20, 50, 50);
+
+    SDL_Text test_text("hello!", sdl.renderer, sdl.font);
 
     bool running = true;
     while (running)
@@ -35,6 +38,7 @@ int main(int argc, char **argv)
 
         SDL_RenderClear(sdl.renderer);
         test_img.draw();
+        test_text.draw();
         SDL_RenderPresent(sdl.renderer);
         SDL_Delay(16);
     }
