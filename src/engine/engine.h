@@ -162,4 +162,5 @@ private:
         SDL_FreeSurface(icon_surface);
     }
 };
-Engine sdl;
+
+Engine engine;
