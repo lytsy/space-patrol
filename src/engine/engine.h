@@ -48,6 +48,16 @@ public:
         SDL_events(&running);
     }
 
+    void render_clear()
+    {
+        SDL_RenderClear(renderer);
+    }
+
+    void render_present()
+    {
+        SDL_RenderPresent(renderer);
+    }
+
 private:
     void _init_sdl(void)
     {

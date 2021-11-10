@@ -19,11 +19,12 @@ int main(int argc, char **argv)
     while (sdl.running)
     {
         sdl.handle_events();
+        sdl.render_clear();
 
-        SDL_RenderClear(sdl.renderer);
         test_img.draw();
         test_text.draw();
-        SDL_RenderPresent(sdl.renderer);
+
+        sdl.render_present();
         SDL_Delay(16);
     }
 
