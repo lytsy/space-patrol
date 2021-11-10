@@ -1,8 +1,8 @@
 
 #include "engine/engine.h"
-#include "engine/sound.h"
-#include "engine/image.h"
-#include "engine/text.h"
+#include "media_types/sound.h"
+#include "media_types/image.h"
+#include "media_types/text.h"
 
 int main(int argc, char **argv)
 {

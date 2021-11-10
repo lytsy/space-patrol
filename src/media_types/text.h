@@ -3,7 +3,6 @@
 #include "../../vendor/sdl/include/SDL2/SDL.h"
 #include "../../vendor/sdl_ttf/include/SDL2/SDL_ttf.h"
 #include <stdio.h>
-#include "config.h"
 
 class Text
 {
