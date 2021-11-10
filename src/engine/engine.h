@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "config.h"
 
-class SDL_Controller
+class Engine
 {
 public:
     SDL_Renderer *renderer;
@@ -127,4 +127,4 @@ private:
         SDL_FreeSurface(icon_surface);
     }
 };
-SDL_Controller sdl;
+Engine sdl;

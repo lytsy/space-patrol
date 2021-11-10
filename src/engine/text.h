@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include "config.h"
 
-class SDL_Text
+class Text
 {
 public:
-    SDL_Text(const char *msg, SDL_Renderer *sdl_renderer, TTF_Font *ttf_font)
+    Text(const char *msg, SDL_Renderer *sdl_renderer, TTF_Font *ttf_font)
     {
         message = (char *)msg;
         renderer = sdl_renderer;

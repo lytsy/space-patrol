@@ -4,10 +4,10 @@
 #include "../../vendor/sdl_mixer/include/SDL2/SDL_mixer.h"
 #include <stdio.h>
 
-class SDL_Sound
+class Sound
 {
 public:
-    SDL_Sound(const char *file)
+    Sound(const char *file)
     {
         filename = (char *)file;
         load();

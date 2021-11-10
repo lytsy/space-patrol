@@ -1,5 +1,5 @@
-#include "headers/main.h"
-#include "headers/config.h"
+#include "engine/main.h"
+#include "engine/config.h"
 void _hide_win32_console();
 
 #if defined(_WIN32) || defined(WIN32)

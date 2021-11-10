@@ -4,10 +4,10 @@
 #include "../../vendor/sdl_image/include/SDL2/SDL_image.h"
 #include <stdio.h>
 
-class SDL_Img
+class Image
 {
 public:
-    SDL_Img(const char *file, SDL_Renderer *sdl_renderer)
+    Image(const char *file, SDL_Renderer *sdl_renderer)
     {
         filename = (char *)file;
         renderer = sdl_renderer;
