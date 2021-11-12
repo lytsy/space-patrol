@@ -17,6 +17,8 @@ public:
     TTF_Font *font;
     SDL_Surface *icon_surface;
     bool running;
+    long dt = 0;
+    int fps = 0;
 
     void init()
     {
@@ -68,17 +70,31 @@ public:
         }
     }
 
-    long get_delta_time()
+    void count_delta_time()
     {
         long now = SDL_GetTicks();
-        long dt = now - _then;
+        dt = now - _then;
         _then = now;
-        return dt;
+    }
+
+    void count_fps()
+    {
+        _past_time += dt;
+        _frames += 1;
+        if (_past_time > 1000)
+        {
+            fps = _frames;
+            _frames = 0;
+            _past_time -= 1000;
+            printf("fps_%i\n", fps);
+        }
     }
 
 private:
     char *error;
     long _then = 0;
+    long _past_time = 0;
+    int _frames = 0;
 
     void _init_sdl(void)
     {

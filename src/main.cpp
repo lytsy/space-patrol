@@ -25,9 +25,10 @@ int main(int argc, char **argv)
         engine.handle_events();
         engine.render_clear();
         engine.check_errors();
+        engine.count_delta_time();
+        engine.count_fps();
 
-        long dt = engine.get_delta_time();
-        background.refresh(dt);
+        background.refresh(engine.dt);
         background.draw();
         test_img.draw();
         test_text.draw();
