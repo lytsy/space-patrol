@@ -1,5 +1,5 @@
 
-#define SDL_MAIN_HANDLED
+#pragma once
 #include "../../vendor/sdl/include/SDL2/SDL.h"
 #include "../../vendor/sdl_image/include/SDL2/SDL_image.h"
 #include <stdio.h>
@@ -37,6 +37,11 @@ public:
         dest.w = w;
         dest.h = h;
         p_dest = &dest;
+    };
+
+    void get_dest(SDL_Rect *rect)
+    {
+        *rect = dest;
     };
 
     void reset_dest()

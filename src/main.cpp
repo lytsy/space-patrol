@@ -3,6 +3,7 @@
 #include "media_types/sound.h"
 #include "media_types/image.h"
 #include "media_types/text.h"
+#include "game/background.h"
 
 int main(int argc, char **argv)
 {
@@ -16,21 +17,27 @@ int main(int argc, char **argv)
 
     Text test_text("hello!", engine.renderer, engine.font);
 
+    Background background("assets/images/backgrounds/bg_0.jpg", engine.renderer, engine.window);
+
     while (engine.running)
     {
+
         engine.handle_events();
         engine.render_clear();
         engine.check_errors();
 
+        background.refresh();
+        background.draw();
         test_img.draw();
         test_text.draw();
 
         engine.render_present();
-        SDL_Delay(16);
+        SDL_Delay(5);
     }
 
     test_sound.destroy();
     test_img.destroy();
+    background.destroy();
     engine.destroy();
     return 0;
 }
