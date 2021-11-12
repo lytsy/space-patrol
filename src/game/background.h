@@ -8,6 +8,7 @@ class Background
 public:
     Image *image;
     SDL_Window *window;
+    float speed = 0.1;
 
     Background(const char *file, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
     {
@@ -41,12 +42,12 @@ public:
         image->set_dest(dest.x, dest.y, dest.w, dest.h);
     }
 
-    void refresh()
+    void refresh(long dt)
     {
         SDL_Rect dest;
         image->get_dest(&dest);
 
-        dest.y += 1;
+        dest.y += dt * speed;
         if (dest.y >= dest.h)
         {
             dest.y -= dest.h;

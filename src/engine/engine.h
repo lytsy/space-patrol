@@ -68,8 +68,18 @@ public:
         }
     }
 
+    long get_delta_time()
+    {
+        long now = SDL_GetTicks();
+        long dt = now - _then;
+        _then = now;
+        return dt;
+    }
+
 private:
     char *error;
+    long _then = 0;
+
     void _init_sdl(void)
     {
 

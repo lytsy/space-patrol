@@ -26,7 +26,8 @@ int main(int argc, char **argv)
         engine.render_clear();
         engine.check_errors();
 
-        background.refresh();
+        long dt = engine.get_delta_time();
+        background.refresh(dt);
         background.draw();
         test_img.draw();
         test_text.draw();
