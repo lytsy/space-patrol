@@ -1,4 +1,5 @@
 
+#pragma once
 #define SDL_MAIN_HANDLED
 #include "../../vendor/sdl/include/SDL2/SDL.h"
 #include "../../vendor/sdl_ttf/include/SDL2/SDL_ttf.h"
@@ -7,11 +8,21 @@
 class Text
 {
 public:
+    SDL_Color color = {255, 0, 0, 0};
+    SDL_Rect dest;
+
     Text(const char *msg, SDL_Renderer *sdl_renderer, TTF_Font *ttf_font)
     {
-        message = (char *)msg;
         renderer = sdl_renderer;
         font = ttf_font;
+        message = (char *)msg;
+        _init_texture();
+        _init_dest();
+    }
+
+    void set_message(const char *msg)
+    {
+        message = (char *)msg;
         _init_texture();
         _init_dest();
     }
@@ -22,6 +33,11 @@ public:
         dest.y = y;
         dest.w = w;
         dest.h = h;
+    };
+
+    void get_dest(SDL_Rect *rect)
+    {
+        *rect = dest;
     };
 
     void draw()
@@ -37,15 +53,12 @@ public:
 private:
     char *message;
     SDL_Renderer *renderer;
-    TTF_Font *fffont;
     TTF_Font *font;
-    SDL_Color color = {255, 0, 0, 0};
     SDL_Texture *texture;
-    SDL_Rect dest;
 
     void _init_texture()
     {
-        SDL_Surface *surface = TTF_RenderText_Solid(font, message, color);
+        SDL_Surface *surface = TTF_RenderText_Blended(font, message, color);
         texture = SDL_CreateTextureFromSurface(renderer, surface);
         if (!texture)
         {

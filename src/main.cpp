@@ -32,6 +32,7 @@ int main(int argc, char **argv)
         background.draw();
         test_img.draw();
         test_text.draw();
+        engine.draw_fps();
 
         engine.render_present();
         SDL_Delay(5);

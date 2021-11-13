@@ -5,6 +5,7 @@
 #include "../../vendor/sdl_ttf/include/SDL2/SDL_ttf.h"
 #include <stdio.h>
 
+#include "../media_types/text.h"
 #include "config.h"
 #include "console.h"
 #include "events.h"
@@ -19,6 +20,7 @@ public:
     bool running;
     long dt = 0;
     int fps = 0;
+    Text *fps_message;
 
     void init()
     {
@@ -32,6 +34,7 @@ public:
         _init_sdl_ttf();
         _init_sdl_window_icon();
         _load_font();
+        _init_fps_message();
     };
 
     void destroy()
@@ -86,8 +89,14 @@ public:
             fps = _frames;
             _frames = 0;
             _past_time -= 1000;
-            printf("fps_%i\n", fps);
         }
+    }
+
+    void draw_fps()
+    {
+        _refresh_fps_message_text();
+        _refresh_fps_message_position();
+        fps_message->draw();
     }
 
 private:
@@ -171,6 +180,26 @@ private:
         {
             printf("Failed TTF_OpenFont: %s\n", TTF_GetError());
         }
+    }
+
+    void _init_fps_message()
+    {
+        fps_message = new Text("fps", renderer, font);
+        fps_message->color = {255, 255, 0, 0};
+    }
+
+    void _refresh_fps_message_text()
+    {
+        char fps_text[20];
+        sprintf(fps_text, "fps %d ", fps);
+        fps_message->set_message(fps_text);
+    }
+
+    void _refresh_fps_message_position()
+    {
+        int window_width, window_height;
+        SDL_GetWindowSize(window, &window_width, &window_height);
+        fps_message->dest.x = window_width - fps_message->dest.w;
     }
 
     void _destroy_sdl_image()
