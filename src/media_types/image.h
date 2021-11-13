@@ -61,6 +61,14 @@ public:
         p_dest = NULL;
     };
 
+    void scale_dest_to_width(int width)
+    {
+        float proportion = (float)src.h / src.w;
+        float height = width * proportion;
+        dest.w = width;
+        dest.h = height;
+    }
+
     void draw()
     {
         SDL_RenderCopy(renderer, texture, p_src, p_dest);

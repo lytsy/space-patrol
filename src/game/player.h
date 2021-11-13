@@ -13,6 +13,7 @@ public:
     {
         window = sdl_window;
         image = new Image(file_name, sdl_renderer);
+        init_size();
         init_position();
     }
 
@@ -33,12 +34,20 @@ public:
         int window_width, window_height;
         SDL_GetWindowSize(window, &window_width, &window_height);
 
-        SDL_Rect src;
-        image->get_src(&src);
+        SDL_Rect dest;
+        image->get_dest(&dest);
 
-        int start_x = (window_width / 2) - src.w / 2;
-        int start_y = window_height - src.h;
+        int start_x = (window_width / 2) - dest.w / 2;
+        int start_y = window_height - dest.h;
         set_position(start_x, start_y);
+    }
+
+    void init_size()
+    {
+        int window_width, window_height;
+        SDL_GetWindowSize(window, &window_width, &window_height);
+        int width = window_width * width_koef_to_screen;
+        image->scale_dest_to_width(width);
     }
 
     void destroy()
@@ -49,4 +58,5 @@ public:
 private:
     const char *file_name = "assets/test_img.png";
     SDL_Window *window;
+    float width_koef_to_screen = 0.1;
 };
