@@ -25,6 +25,11 @@ public:
         p_src = &src;
     };
 
+    void get_src(SDL_Rect *rect)
+    {
+        *rect = src;
+    };
+
     void reset_src()
     {
         p_src = NULL;
@@ -38,6 +43,13 @@ public:
         dest.h = h;
         p_dest = &dest;
     };
+
+    void set_dest_position(int x, int y)
+    {
+        dest.x = x;
+        dest.y = y;
+        p_dest = &dest;
+    }
 
     void get_dest(SDL_Rect *rect)
     {

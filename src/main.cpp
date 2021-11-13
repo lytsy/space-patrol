@@ -4,6 +4,7 @@
 #include "media_types/image.h"
 #include "media_types/text.h"
 #include "game/background.h"
+#include "game/player.h"
 
 int main(int argc, char **argv)
 {
@@ -12,12 +13,11 @@ int main(int argc, char **argv)
     Sound test_sound("assets/sound.mp3");
     test_sound.play();
 
-    Image test_img("assets/test_img.png", engine.renderer);
-    test_img.set_dest(20, 20, 50, 50);
-
     Text test_text("hello!", engine.renderer, engine.font);
 
     Background background("assets/images/backgrounds/bg_0.jpg", engine.renderer, engine.window);
+
+    Player player(engine.renderer, engine.window);
 
     while (engine.running)
     {
@@ -30,8 +30,8 @@ int main(int argc, char **argv)
 
         background.refresh(engine.dt);
         background.draw();
-        test_img.draw();
         test_text.draw();
+        player.draw();
         engine.draw_fps();
 
         engine.render_present();
@@ -39,8 +39,8 @@ int main(int argc, char **argv)
     }
 
     test_sound.destroy();
-    test_img.destroy();
     background.destroy();
+    player.destroy();
     engine.destroy();
     return 0;
 }
