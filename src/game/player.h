@@ -32,13 +32,14 @@ public:
     void init_position()
     {
         int window_width, window_height;
+
         SDL_GetWindowSize(window, &window_width, &window_height);
 
         SDL_Rect dest;
         image->get_dest(&dest);
 
         int start_x = (window_width / 2) - dest.w / 2;
-        int start_y = window_height - dest.h;
+        int start_y = (1 - start_y_offset_koef) * window_height - dest.h;
         set_position(start_x, start_y);
     }
 
@@ -104,4 +105,5 @@ private:
     const char *file_name = "assets/images/player/player.png";
     SDL_Window *window;
     float width_koef_to_screen = 0.1;
+    float start_y_offset_koef = 0.05;
 };
