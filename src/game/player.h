@@ -101,7 +101,7 @@ public:
     }
 
 private:
-    const char *file_name = "assets/test_img.png";
+    const char *file_name = "assets/images/player/player.png";
     SDL_Window *window;
     float width_koef_to_screen = 0.1;
 };
