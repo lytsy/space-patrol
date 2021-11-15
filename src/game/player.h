@@ -8,6 +8,8 @@ public:
     int dx;
     int dy;
     float speed = 0.2;
+    int reload_time = 400;
+    long current_reload_time = reload_time;
 
     Image *image;
     Player(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
@@ -51,7 +53,7 @@ public:
         image->scale_dest_to_width(width);
     }
 
-    void handle_keypress(int *keyboard)
+    void handle_keypress(int *keyboard, long dt)
     {
         dx = 0;
         dy = 0;
@@ -71,6 +73,10 @@ public:
         if (keyboard[SDL_SCANCODE_UP] == 1)
         {
             dy = -1;
+        }
+        if (keyboard[SDL_SCANCODE_SPACE] == 1)
+        {
+            fire(dt);
         }
     }
 
@@ -99,6 +105,16 @@ public:
     void destroy()
     {
         image->destroy();
+    }
+
+    void fire(long dt)
+    {
+        current_reload_time += dt;
+        if (current_reload_time >= reload_time)
+        {
+            current_reload_time -= reload_time;
+            printf("fire\n");
+        }
     }
 
 private:
