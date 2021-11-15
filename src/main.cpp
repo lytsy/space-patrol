@@ -28,7 +28,11 @@ int main(int argc, char **argv)
         engine.count_delta_time();
         engine.count_fps();
 
+        player.handle_keypress(engine.keyboard);
+
         background.refresh(engine.dt);
+        player.refresh(engine.dt);
+
         background.draw();
         test_text.draw();
         player.draw();

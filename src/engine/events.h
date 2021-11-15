@@ -1,14 +1,9 @@
 
 #include "../../vendor/sdl/include/SDL2/SDL.h"
 
-void keydown_handler(SDL_Scancode key_code);
-void keyup_handler(SDL_Scancode key_code);
-void click_handler(SDL_MouseButtonEvent event);
-
-void SDL_events(bool *running)
+void SDL_events(bool *running, int *keyboard)
 {
     SDL_Event event;
-
     while (SDL_PollEvent(&event))
     {
 
@@ -16,17 +11,17 @@ void SDL_events(bool *running)
         {
             *running = false;
         }
-        else if (event.type == SDL_KEYDOWN && event.key.repeat == 0)
+        else if (event.type == SDL_KEYDOWN && event.key.repeat == 0 && event.key.keysym.scancode < SDL_NUM_SCANCODES)
         {
-            keydown_handler(event.key.keysym.scancode);
+            keyboard[event.key.keysym.scancode] = 1;
         }
-        else if (event.type == SDL_KEYUP && event.key.repeat == 0)
+        else if (event.type == SDL_KEYUP && event.key.repeat == 0 && event.key.keysym.scancode < SDL_NUM_SCANCODES)
         {
-            keyup_handler(event.key.keysym.scancode);
+            keyboard[event.key.keysym.scancode] = 0;
         }
         else if (event.type == SDL_MOUSEBUTTONDOWN)
         {
-            click_handler(event.button);
+            printf("click handler not implemented");
         }
     }
 }

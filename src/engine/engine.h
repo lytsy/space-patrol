@@ -21,6 +21,7 @@ public:
     long dt = 0;
     int fps = 0;
     Text *fps_message;
+    int keyboard[SDL_NUM_SCANCODES] = {0};
 
     void init()
     {
@@ -50,7 +51,7 @@ public:
 
     void handle_events()
     {
-        SDL_events(&running);
+        SDL_events(&running, keyboard);
     }
 
     void render_clear()

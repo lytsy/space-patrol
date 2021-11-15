@@ -5,8 +5,9 @@ class Player
 public:
     int x;
     int y;
-    int w;
-    int h;
+    int dx;
+    int dy;
+    float speed = 0.2;
 
     Image *image;
     Player(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
@@ -19,7 +20,6 @@ public:
 
     void draw()
     {
-        image->set_dest_position(x, y);
         image->draw();
     }
 
@@ -48,6 +48,51 @@ public:
         SDL_GetWindowSize(window, &window_width, &window_height);
         int width = window_width * width_koef_to_screen;
         image->scale_dest_to_width(width);
+    }
+
+    void handle_keypress(int *keyboard)
+    {
+        dx = 0;
+        dy = 0;
+
+        if (keyboard[SDL_SCANCODE_RIGHT] == 1)
+        {
+            dx = 1;
+        }
+        if (keyboard[SDL_SCANCODE_LEFT] == 1)
+        {
+            dx = -1;
+        }
+        if (keyboard[SDL_SCANCODE_DOWN] == 1)
+        {
+            dy = 1;
+        }
+        if (keyboard[SDL_SCANCODE_UP] == 1)
+        {
+            dy = -1;
+        }
+    }
+
+    void refresh(long dt)
+    {
+        int window_width, window_height;
+        SDL_GetWindowSize(window, &window_width, &window_height);
+        SDL_Rect player_texture;
+        image->get_dest(&player_texture);
+
+        int new_x = x + dx * dt * speed;
+        if (new_x > 0 && new_x < window_width - player_texture.w)
+        {
+            x = new_x;
+        }
+
+        int new_y = y + dy * dt * speed;
+        if (new_y > 0 && new_y < window_height - player_texture.h)
+        {
+            y = new_y;
+        }
+
+        image->set_dest_position(x, y);
     }
 
     void destroy()
