@@ -2,9 +2,9 @@
 #include "engine/engine.h"
 #include "media_types/sound.h"
 #include "media_types/image.h"
-#include "media_types/text.h"
 #include "game/background.h"
 #include "game/player.h"
+#include "game/bullet_list.h"
 
 int main(int argc, char **argv)
 {
@@ -13,11 +13,10 @@ int main(int argc, char **argv)
     Sound test_sound("assets/sound.mp3");
     test_sound.play();
 
-    Text test_text("hello!", engine.renderer, engine.font);
-
     Background background("assets/images/backgrounds/bg_0.jpg", engine.renderer, engine.window);
 
-    Player player(engine.renderer, engine.window);
+    Bullet_list *bullet_list = new Bullet_list();
+    Player player(engine.renderer, engine.window, bullet_list);
 
     while (engine.running)
     {
@@ -32,10 +31,12 @@ int main(int argc, char **argv)
 
         background.refresh(engine.dt);
         player.refresh(engine.dt);
+        bullet_list->refresh_bullets_positions(engine.dt);
+        bullet_list->destroy_remote_bullets();
 
         background.draw();
-        test_text.draw();
         player.draw();
+        bullet_list->draw_bullets();
         engine.draw_fps();
 
         engine.render_present();
