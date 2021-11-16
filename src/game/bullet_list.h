@@ -78,7 +78,7 @@ public:
         {
             tmp = current;
             current = current->next;
-            if (tmp->y < 20)
+            if (tmp->y < 20 || tmp->hp <= 0)
             {
                 delete_bullet(tmp);
             }

@@ -37,7 +37,7 @@ int main(int argc, char **argv)
         bullet_list->destroy_remote_bullets();
         enemy_list->spawn_enemys();
         enemy_list->refresh_enemys_positions(engine.dt);
-        enemy_list->destroy_remote_enemys();
+        enemy_list->destroy_enemys();
         enemy_list->check_collision(bullet_list);
 
         background.draw();

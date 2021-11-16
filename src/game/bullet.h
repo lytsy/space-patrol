@@ -9,6 +9,8 @@ public:
     int dy = -1;
     float speed = 0.4;
     Image *image;
+    int hp = 1;
+    int damage = 1;
 
     Bullet(int nx, int ny, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
     {
@@ -51,6 +53,11 @@ public:
     void draw()
     {
         image->draw();
+    }
+
+    void take_damage(int damage)
+    {
+        hp -= damage;
     }
 
 private:

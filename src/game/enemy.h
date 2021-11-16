@@ -11,6 +11,7 @@ public:
     int dx = 0;
     float x_speed = 0.02;
     float y_speed = 0.15;
+    int hp = 2;
     Image *image;
 
     Enemy(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
@@ -70,7 +71,8 @@ public:
 
             if (is_left_top_collision || is_right_top_collision)
             {
-                printf("collision effect not implemented\n");
+                take_damage(current->damage);
+                current->take_damage(current->damage);
             }
 
             current = current->next;
@@ -80,6 +82,11 @@ public:
     bool is_point_in_box(int x, int y, int bx, int by, int bw, int bh)
     {
         return x > bx && (x < (bx + bw)) && y > by && (y < (by + bh));
+    }
+
+    void take_damage(int damage)
+    {
+        hp -= damage;
     }
 
 private:

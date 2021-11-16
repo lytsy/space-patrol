@@ -76,7 +76,7 @@ public:
         }
     }
 
-    void destroy_remote_enemys()
+    void destroy_enemys()
     {
         Enemy *current = head;
         Enemy *tmp = NULL;
@@ -92,7 +92,7 @@ public:
         {
             tmp = current;
             current = current->next;
-            if (tmp->y > window_height)
+            if (tmp->y > window_height || tmp->hp <= 0)
             {
                 delete_enemy(tmp);
             }
