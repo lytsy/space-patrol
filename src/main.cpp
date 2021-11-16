@@ -5,6 +5,7 @@
 #include "game/background.h"
 #include "game/player.h"
 #include "game/bullet_list.h"
+#include "game/enemy_list.h"
 
 int main(int argc, char **argv)
 {
@@ -16,6 +17,7 @@ int main(int argc, char **argv)
     Background background("assets/images/backgrounds/bg_0.jpg", engine.renderer, engine.window);
 
     Bullet_list *bullet_list = new Bullet_list();
+    Enemy_list *enemy_list = new Enemy_list(engine.renderer, engine.window);
     Player player(engine.renderer, engine.window, bullet_list);
 
     while (engine.running)
@@ -33,10 +35,15 @@ int main(int argc, char **argv)
         player.refresh(engine.dt);
         bullet_list->refresh_bullets_positions(engine.dt);
         bullet_list->destroy_remote_bullets();
+        enemy_list->spawn_enemys();
+        enemy_list->refresh_enemys_positions(engine.dt);
+        enemy_list->destroy_remote_enemys();
+        enemy_list->check_collision(bullet_list);
 
         background.draw();
-        player.draw();
+        enemy_list->draw_enemys();
         bullet_list->draw_bullets();
+        player.draw();
         engine.draw_fps();
 
         engine.render_present();
