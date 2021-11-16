@@ -126,7 +126,7 @@ public:
         SDL_Rect player_texture;
         image->get_dest(&player_texture);
         bullet_x = x + player_texture.w * 0.5;
-        bullet_list->add_bullet(bullet_x, y, renderer, window);
+        bullet_list->add_bullet(bullet_x, y, -1, renderer, window);
     }
 
 private:

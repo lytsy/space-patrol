@@ -13,10 +13,14 @@ public:
     float y_speed = 0.15;
     int hp = 2;
     Image *image;
+    int reload_time = 500;
+    long current_reload_time = reload_time;
 
-    Enemy(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
+    Enemy(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Bullet_list *list)
     {
+        renderer = sdl_renderer;
         window = sdl_window;
+        bullet_list = list;
         image = new Image(file_name, sdl_renderer);
 
         init_size();
@@ -41,6 +45,7 @@ public:
         y += dy * dt * y_speed;
         x += dx * dt * x_speed;
         image->set_dest_position(x, y);
+        fire(dt);
     }
 
     void init_size()
@@ -89,8 +94,30 @@ public:
         hp -= damage;
     }
 
+    void fire(long dt)
+    {
+        current_reload_time += dt;
+        if (current_reload_time >= reload_time)
+        {
+            current_reload_time -= reload_time;
+            create_bullet();
+        }
+    }
+
+    void create_bullet()
+    {
+        int bullet_x;
+        SDL_Rect player_texture;
+        image->get_dest(&player_texture);
+        bullet_x = x + player_texture.w * 0.5;
+        bullet_list->add_bullet(bullet_x, y + player_texture.h + 5, 2, renderer, window);
+    }
+
 private:
     SDL_Window *window;
+    SDL_Renderer *renderer;
+    Bullet_list *bullet_list;
+
     const char *file_name = "assets/images/enemys/enemy_0.png";
     float width_koef_to_screen = 0.07;
 };

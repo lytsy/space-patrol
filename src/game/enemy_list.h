@@ -6,15 +6,16 @@ class Enemy_list
 {
 public:
     Enemy *head = NULL;
-    Enemy_list(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
+    Enemy_list(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Bullet_list *list)
     {
         window = sdl_window;
         renderer = sdl_renderer;
+        bullet_list = list;
     }
 
     void add_enemy()
     {
-        Enemy *tmp = new Enemy(renderer, window);
+        Enemy *tmp = new Enemy(renderer, window, bullet_list);
         tmp->next = NULL;
 
         if (head == NULL)
@@ -132,4 +133,5 @@ public:
 private:
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
+    Bullet_list *bullet_list = NULL;
 };

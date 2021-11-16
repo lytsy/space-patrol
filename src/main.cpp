@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     Background background("assets/images/backgrounds/bg_0.jpg", engine.renderer, engine.window);
 
     Bullet_list *bullet_list = new Bullet_list();
-    Enemy_list *enemy_list = new Enemy_list(engine.renderer, engine.window);
+    Enemy_list *enemy_list = new Enemy_list(engine.renderer, engine.window, bullet_list);
     Player player(engine.renderer, engine.window, bullet_list);
 
     while (engine.running)

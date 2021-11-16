@@ -6,15 +6,16 @@ class Bullet
 public:
     Bullet *next;
     int x, y;
-    int dy = -1;
+    int dy;
     float speed = 0.4;
     Image *image;
     int hp = 1;
     int damage = 1;
 
-    Bullet(int nx, int ny, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
+    Bullet(int nx, int ny, int ndy, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
     {
         window = sdl_window;
+        dy = ndy;
         image = new Image(file_name, sdl_renderer);
 
         set_src_frame();
