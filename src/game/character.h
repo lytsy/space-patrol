@@ -81,6 +81,7 @@ public:
             w *= screen->w_scale;
             y *= screen->h_scale;
             h *= screen->h_scale;
+            speed *= screen->w_scale * screen->h_scale;
         }
     }
 
@@ -96,5 +97,6 @@ private:
     int bullet_dy;
     float relative_width;
     int reload_time;
+    int speed;
     long current_reload_time;
 };

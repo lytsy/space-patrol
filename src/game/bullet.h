@@ -61,6 +61,7 @@ public:
             w *= screen->w_scale;
             y *= screen->h_scale;
             h *= screen->h_scale;
+            speed *= screen->w_scale * screen->h_scale;
         }
     }
 
