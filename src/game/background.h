@@ -9,51 +9,45 @@ public:
     Image *image;
     SDL_Window *window;
     float speed = 0.1;
+    int x, y, w, h;
 
     Background(const char *file, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
     {
         window = sdl_window;
         image = new Image(file, sdl_renderer);
+        x = 0;
+        y = 0;
+        w = image->src.w;
+        h = image->src.h;
     }
 
     void draw()
     {
-        SDL_Rect dest;
-        image->get_dest(&dest);
-
         int window_width, window_height;
         SDL_GetWindowSize(window, &window_width, &window_height);
 
         int draw_area_width = window_width;
-        int repeat_x_steps = ceil((float)draw_area_width / dest.w);
+        int repeat_x_steps = ceil((float)draw_area_width / w);
 
-        int draw_area_height = window_height + dest.h;
-        int repeat_y_steps = ceil((float)draw_area_height / dest.h);
+        int draw_area_height = window_height + h;
+        int repeat_y_steps = ceil((float)draw_area_height / h);
 
-        for (int x = 0; x < repeat_x_steps; x++)
+        for (int i = 0; i < repeat_x_steps; i++)
         {
-            for (int y = 0; y < repeat_y_steps; y++)
+            for (int j = 0; j < repeat_y_steps; j++)
             {
-                image->set_dest(dest.x + (x * dest.w), dest.y - (y * dest.h), dest.w, dest.h);
-                image->draw();
+                image->draw(x + (i * w), y - (j * h), w, h);
             }
         }
-
-        image->set_dest(dest.x, dest.y, dest.w, dest.h);
     }
 
     void refresh(long dt)
     {
-        SDL_Rect dest;
-        image->get_dest(&dest);
-
-        dest.y += dt * speed;
-        if (dest.y >= dest.h)
+        y += dt * speed;
+        if (y >= h)
         {
-            dest.y -= dest.h;
+            y -= h;
         }
-
-        image->set_dest(dest.x, dest.y, dest.w, dest.h);
     }
 
     void destroy()

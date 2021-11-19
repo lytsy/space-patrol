@@ -7,71 +7,32 @@
 class Image
 {
 public:
+    SDL_Rect src;
+
     Image(const char *file, SDL_Renderer *sdl_renderer)
     {
-        filename = (char *)file;
         renderer = sdl_renderer;
-        _load_texture();
-        _init_src();
-        _init_dest();
+        _loadtexture(file);
+        _init_rect(&src);
+        _init_rect(&dest);
     }
 
-    void set_src(int x, int y, int w, int h)
+    void scale_to_width(int *w, int *h, SDL_Window *window, float relative_width)
     {
-        src.x = x;
-        src.y = y;
-        src.w = w;
-        src.h = h;
-        p_src = &src;
-    };
+        int window_width, window_height;
+        SDL_GetWindowSize(window, &window_width, &window_height);
+        float proportion = (float)src.h / src.w;
+        *w = window_width * relative_width;
+        *h = *w * proportion;
+    }
 
-    void get_src(SDL_Rect *rect)
-    {
-        *rect = src;
-    };
-
-    void reset_src()
-    {
-        p_src = NULL;
-    };
-
-    void set_dest(int x, int y, int w, int h)
+    void draw(int x, int y, int w, int h)
     {
         dest.x = x;
         dest.y = y;
         dest.w = w;
         dest.h = h;
-        p_dest = &dest;
-    };
-
-    void set_dest_position(int x, int y)
-    {
-        dest.x = x;
-        dest.y = y;
-        p_dest = &dest;
-    }
-
-    void get_dest(SDL_Rect *rect)
-    {
-        *rect = dest;
-    };
-
-    void reset_dest()
-    {
-        p_dest = NULL;
-    };
-
-    void scale_dest_to_width(int width)
-    {
-        float proportion = (float)src.h / src.w;
-        float height = width * proportion;
-        dest.w = width;
-        dest.h = height;
-    }
-
-    void draw()
-    {
-        SDL_RenderCopy(renderer, texture, p_src, p_dest);
+        SDL_RenderCopy(renderer, texture, &src, &dest);
     };
 
     void destroy()
@@ -80,17 +41,13 @@ public:
     }
 
 private:
-    char *filename;
     SDL_Renderer *renderer;
     SDL_Texture *texture;
-    SDL_Rect src;
     SDL_Rect dest;
-    SDL_Rect *p_src;
-    SDL_Rect *p_dest;
 
-    void _load_texture()
+    void _loadtexture(const char *file)
     {
-        SDL_Surface *surface = IMG_Load(filename);
+        SDL_Surface *surface = IMG_Load(file);
         if (!surface)
         {
             printf("Failed IMG_Load: %s\n", SDL_GetError());
@@ -103,19 +60,10 @@ private:
         SDL_FreeSurface(surface);
     };
 
-    void _init_src()
+    void _init_rect(SDL_Rect *rect)
     {
-        src.x = 0;
-        src.y = 0;
-        SDL_QueryTexture(texture, NULL, NULL, &src.w, &src.h);
-        p_src = NULL;
-    }
-
-    void _init_dest()
-    {
-        dest.x = 0;
-        dest.y = 0;
-        SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
-        p_dest = &dest;
+        rect->x = 0;
+        rect->y = 0;
+        SDL_QueryTexture(texture, NULL, NULL, &rect->w, &rect->h);
     }
 };

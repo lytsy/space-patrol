@@ -26,24 +26,13 @@ public:
         init_position();
     }
 
-    void set_position(int nx, int ny)
-    {
-        x = nx;
-        y = ny;
-    }
-
     void init_position()
     {
         int window_width, window_height;
-
         SDL_GetWindowSize(window, &window_width, &window_height);
 
-        SDL_Rect dest;
-        image->get_dest(&dest);
-
-        int start_x = (window_width / 2) - dest.w / 2;
-        int start_y = (1 - y_offset_relative) * window_height - dest.h;
-        set_position(start_x, start_y);
+        x = (window_width / 2) - w / 2;
+        y = (1 - y_offset_relative) * window_height - h;
     }
 
     void handle_keypress(int *keyboard, long dt)
@@ -77,22 +66,20 @@ public:
     {
         int window_width, window_height;
         SDL_GetWindowSize(window, &window_width, &window_height);
-        SDL_Rect player_texture;
-        image->get_dest(&player_texture);
 
         int new_x = x + dx * dt * x_speed;
-        if (new_x > 0 && new_x < window_width - player_texture.w)
+        if (new_x > 0 && new_x < window_width - w)
         {
             x = new_x;
         }
 
         int new_y = y + dy * dt * y_speed;
-        if (new_y > 0 && new_y < window_height - player_texture.h)
+        if (new_y > 0 && new_y < window_height - h)
         {
             y = new_y;
         }
 
-        image->set_dest_position(x, y);
+        init_size();
     }
 
 private:
