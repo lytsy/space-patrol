@@ -23,7 +23,7 @@ public:
     Enemy *next;
     int hp = ENEMY_HP;
 
-    Enemy(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen, Bullet_list *list) : Character(sdl_renderer, sdl_window, engine_screen, list, ENEMY_BASE_CONFIG)
+    Enemy(Window_State window_state, Bullet_list *list) : Character(window_state, list, ENEMY_BASE_CONFIG)
     {
         init_position();
         dx = rand() % 6 - 3;

@@ -20,6 +20,14 @@ public:
     float h_scale;
 };
 
+class Window_State
+{
+public:
+    Screen *screen;
+    SDL_Renderer *renderer;
+    SDL_Window *window;
+};
+
 class Engine
 {
 public:
@@ -33,6 +41,7 @@ public:
     Text *fps_message;
     int keyboard[SDL_NUM_SCANCODES] = {0};
     Screen screen;
+    Window_State window_state;
 
     void init()
     {
@@ -48,7 +57,8 @@ public:
         _load_font();
         _init_fps_message();
         _init_screen();
-    };
+        _init_window_state();
+    }
 
     void destroy()
     {
@@ -59,7 +69,7 @@ public:
         _destroy_sdl_image();
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
-    };
+    }
 
     void handle_events()
     {
@@ -148,7 +158,7 @@ private:
             printf("Failed SDL_CreateWindow.\nSDL Error: '%s'\n", SDL_GetError());
             exit(1);
         }
-    };
+    }
 
     void _init_sdl_renderer()
     {
@@ -158,7 +168,7 @@ private:
             printf("Failed SDL_CreateRenderer.\nSDL Error: '%s'\n", SDL_GetError());
             exit(1);
         }
-    };
+    }
 
     void _init_sdl_image()
     {
@@ -218,6 +228,13 @@ private:
         SDL_GetWindowSize(window, &screen.w, &screen.h);
         screen.w_scale = 1.0;
         screen.h_scale = 1.0;
+    }
+
+    void _init_window_state()
+    {
+        window_state.renderer = renderer;
+        window_state.window = window;
+        window_state.screen = &screen;
     }
 
     void _refresh_fps_message_text()

@@ -6,9 +6,9 @@ class Bullet_list
 public:
     Bullet *head = NULL;
 
-    void add_bullet(int nx, int ny, int dy, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen)
+    void add_bullet(Window_State window_state, int nx, int ny, int dy)
     {
-        Bullet *tmp = new Bullet(nx, ny, dy, sdl_renderer, sdl_window, engine_screen);
+        Bullet *tmp = new Bullet(window_state, nx, ny, dy);
         tmp->next = NULL;
 
         if (head == NULL)

@@ -17,17 +17,16 @@ class Character
 public:
     int x, y, w, h;
     int dx, dy;
-    SDL_Window *window;
     Image *image;
     Screen *screen;
 
-    Character(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen, Bullet_list *list, Character_config config)
+    Character(Window_State win_state, Bullet_list *list, Character_config config)
     {
-        window = sdl_window;
-        renderer = sdl_renderer;
+        window_state = win_state;
+        window = win_state.window;
+        screen = win_state.screen;
         bullet_list = list;
-        screen = engine_screen;
-        image = new Image(config.file, sdl_renderer);
+        image = new Image(config.file, win_state.renderer);
         relative_width = config.relative_width;
         reload_time = config.reload;
         current_reload_time = reload_time;
@@ -42,7 +41,7 @@ public:
 
     void init_size()
     {
-        image->scale_to_relative_size(&w, &h, window, relative_width);
+        image->scale_to_relative_size(&w, &h, window_state.window, relative_width);
     }
 
     void fire(long dt)
@@ -71,7 +70,7 @@ public:
             bullet_y = y + h + bullet_offset_y;
         }
 
-        bullet_list->add_bullet(bullet_x, bullet_y, bullet_dy, renderer, window, screen);
+        bullet_list->add_bullet(window_state, bullet_x, bullet_y, bullet_dy);
     }
 
     void on_resize()
@@ -91,7 +90,8 @@ public:
     }
 
 private:
-    SDL_Renderer *renderer;
+    Window_State window_state;
+    SDL_Window *window;
     Bullet_list *bullet_list;
     int bullet_dy;
     float relative_width;

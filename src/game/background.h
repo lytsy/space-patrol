@@ -6,15 +6,11 @@
 class Background
 {
 public:
-    Image *image;
-    SDL_Window *window;
-    float speed = 0.1;
-    int x, y, w, h;
-
-    Background(const char *file, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
+    Background(Window_State window_state)
     {
-        window = sdl_window;
-        image = new Image(file, sdl_renderer);
+        window = window_state.window;
+        screen = window_state.screen;
+        image = new Image(file, window_state.renderer);
         x = 0;
         y = 0;
         w = image->src.w;
@@ -23,13 +19,10 @@ public:
 
     void draw()
     {
-        int window_width, window_height;
-        SDL_GetWindowSize(window, &window_width, &window_height);
-
-        int draw_area_width = window_width;
+        int draw_area_width = screen->w;
         int repeat_x_steps = ceil((float)draw_area_width / w);
 
-        int draw_area_height = window_height + h;
+        int draw_area_height = screen->h + h;
         int repeat_y_steps = ceil((float)draw_area_height / h);
 
         for (int i = 0; i < repeat_x_steps; i++)
@@ -54,4 +47,12 @@ public:
     {
         image->destroy();
     }
+
+private:
+    Image *image;
+    SDL_Window *window;
+    Screen *screen;
+    float speed = 0.1;
+    int x, y, w, h;
+    const char *file = "assets/images/backgrounds/bg_0.jpg";
 };

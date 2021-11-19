@@ -14,11 +14,11 @@ int main(int argc, char **argv)
     Sound test_sound("assets/sound.mp3");
     test_sound.play();
 
-    Background background("assets/images/backgrounds/bg_0.jpg", engine.renderer, engine.window);
+    Background background(engine.window_state);
 
     Bullet_list *bullet_list = new Bullet_list();
-    Enemy_list *enemy_list = new Enemy_list(engine.renderer, engine.window, &engine.screen, bullet_list);
-    Player player(engine.renderer, engine.window, &engine.screen, bullet_list);
+    Enemy_list *enemy_list = new Enemy_list(engine.window_state, bullet_list);
+    Player player(engine.window_state, bullet_list);
 
     while (engine.running)
     {

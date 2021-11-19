@@ -21,7 +21,7 @@ Character_config PLAYER_BASE_CONFIG = {
 class Player : public Character
 {
 public:
-    Player(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen, Bullet_list *list) : Character(sdl_renderer, sdl_window, engine_screen, list, PLAYER_BASE_CONFIG)
+    Player(Window_State window_state, Bullet_list *list) : Character(window_state, list, PLAYER_BASE_CONFIG)
     {
         init_position();
     }
@@ -74,8 +74,6 @@ public:
         {
             y = new_y;
         }
-
-        init_size();
     }
 
 private:

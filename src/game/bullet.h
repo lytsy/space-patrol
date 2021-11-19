@@ -5,19 +5,17 @@ class Bullet
 {
 public:
     Bullet *next;
+    Image *image;
     int x, y, w, h;
     int dy;
-    float speed = 0.4;
-    Image *image;
-    int hp = 1;
     int damage = 1;
-    Screen *screen;
+    int hp = 1;
 
-    Bullet(int nx, int ny, int ndy, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen)
+    Bullet(Window_State window_state, int nx, int ny, int ndy)
     {
-        window = sdl_window;
-        image = new Image(file_name, sdl_renderer);
-        screen = engine_screen;
+        window = window_state.window;
+        screen = window_state.screen;
+        image = new Image(file_name, window_state.renderer);
 
         init_src_size();
         init_dest_size();
@@ -68,6 +66,8 @@ public:
 
 private:
     SDL_Window *window;
+    Screen *screen;
+    float speed = 0.4;
     const char *file_name = "assets/images/bullets/player_bullet.png";
     float relative_width = 0.03;
     int frame_size = 64;
