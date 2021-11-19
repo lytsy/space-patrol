@@ -49,7 +49,7 @@ public:
                 {
                     prev->next = current->next;
                 }
-
+                current->destroy();
                 free(current);
                 return;
             }

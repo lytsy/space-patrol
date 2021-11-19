@@ -23,6 +23,7 @@ public:
     void set_message(const char *msg)
     {
         message = (char *)msg;
+        SDL_DestroyTexture(texture);
         _init_texture();
         _init_dest();
     }

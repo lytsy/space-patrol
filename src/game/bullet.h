@@ -6,6 +6,7 @@ class Bullet
 public:
     Bullet *next;
     Image *image;
+    Screen *screen;
     int x, y, w, h;
     int dy;
     int damage = 1;
@@ -65,9 +66,13 @@ public:
         }
     }
 
+    void destroy()
+    {
+        image->destroy();
+    }
+
 private:
     SDL_Window *window;
-    Screen *screen;
     float speed = 0.4;
     const char *file_name = "assets/images/bullets/player_bullet.png";
     float relative_width = 0.03;

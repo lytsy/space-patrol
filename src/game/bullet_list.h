@@ -41,7 +41,7 @@ public:
                 {
                     prev->next = current->next;
                 }
-
+                current->destroy();
                 free(current);
                 return;
             }
@@ -78,7 +78,7 @@ public:
         {
             tmp = current;
             current = current->next;
-            if (tmp->y < 20 || tmp->hp <= 0)
+            if (tmp->y < 0 || tmp->y > tmp->screen->h || tmp->x < 0 || tmp->x > tmp->screen->w || tmp->hp <= 0)
             {
                 delete_bullet(tmp);
             }
