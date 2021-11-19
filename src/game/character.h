@@ -1,4 +1,5 @@
 #pragma once
+#include "../engine/engine.h"
 #include "../media_types/image.h"
 #include "bullet_list.h"
 
@@ -18,12 +19,14 @@ public:
     int dx, dy;
     SDL_Window *window;
     Image *image;
+    Screen *screen;
 
-    Character(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Bullet_list *list, Character_config config)
+    Character(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen, Bullet_list *list, Character_config config)
     {
         window = sdl_window;
         renderer = sdl_renderer;
         bullet_list = list;
+        screen = engine_screen;
         image = new Image(config.file, sdl_renderer);
         relative_width = config.relative_width;
         reload_time = config.reload;
@@ -39,7 +42,7 @@ public:
 
     void init_size()
     {
-        image->scale_to_width(&w, &h, window, relative_width);
+        image->scale_to_relative_size(&w, &h, window, relative_width);
     }
 
     void fire(long dt)
@@ -68,7 +71,18 @@ public:
             bullet_y = y + h + bullet_offset_y;
         }
 
-        bullet_list->add_bullet(bullet_x, bullet_y, bullet_dy, renderer, window);
+        bullet_list->add_bullet(bullet_x, bullet_y, bullet_dy, renderer, window, screen);
+    }
+
+    void on_resize()
+    {
+        if (screen->w_scale != 1.0 || screen->h_scale != 1.0)
+        {
+            x *= screen->w_scale;
+            w *= screen->w_scale;
+            y *= screen->h_scale;
+            h *= screen->h_scale;
+        }
     }
 
     void destroy()

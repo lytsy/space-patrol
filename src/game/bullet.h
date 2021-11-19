@@ -11,11 +11,13 @@ public:
     Image *image;
     int hp = 1;
     int damage = 1;
+    Screen *screen;
 
-    Bullet(int nx, int ny, int ndy, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window)
+    Bullet(int nx, int ny, int ndy, SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen)
     {
         window = sdl_window;
         image = new Image(file_name, sdl_renderer);
+        screen = engine_screen;
 
         init_src_size();
         init_dest_size();
@@ -33,11 +35,12 @@ public:
 
     void init_dest_size()
     {
-        image->scale_to_width(&w, &h, window, relative_width);
+        image->scale_to_relative_size(&w, &h, window, relative_width);
     }
 
     void refresh(long dt)
     {
+        on_resize();
         y += dy * dt * speed;
         init_dest_size();
     }
@@ -50,6 +53,17 @@ public:
     void take_damage(int damage)
     {
         hp -= damage;
+    }
+
+    void on_resize()
+    {
+        if (screen->w_scale != 1.0 || screen->h_scale != 1.0)
+        {
+            x *= screen->w_scale;
+            w *= screen->w_scale;
+            y *= screen->h_scale;
+            h *= screen->h_scale;
+        }
     }
 
 private:

@@ -23,7 +23,7 @@ public:
     Enemy *next;
     int hp = ENEMY_HP;
 
-    Enemy(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Bullet_list *list) : Character(sdl_renderer, sdl_window, list, ENEMY_BASE_CONFIG)
+    Enemy(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen, Bullet_list *list) : Character(sdl_renderer, sdl_window, engine_screen, list, ENEMY_BASE_CONFIG)
     {
         init_position();
         dx = rand() % 6 - 3;
@@ -32,14 +32,13 @@ public:
 
     void init_position()
     {
-        int window_width, window_height;
-        SDL_GetWindowSize(window, &window_width, &window_height);
-        x = rand() % (window_width - w) + w * 0.5;
-        y = rand() % window_height * 0.3 * -1;
+        x = rand() % (screen->w - w) + w * 0.5;
+        y = rand() % screen->h * 0.3 * -1;
     }
 
     void refresh(long dt)
     {
+        on_resize();
         y += dy * dt * y_speed;
         x += dx * dt * x_speed;
         fire(dt);

@@ -1,3 +1,4 @@
+#pragma once
 #define SDL_MAIN_HANDLED
 #include "../../vendor/sdl/include/SDL2/SDL.h"
 #include "../../vendor/sdl_image/include/SDL2/SDL_image.h"
@@ -9,6 +10,15 @@
 #include "config.h"
 #include "console.h"
 #include "events.h"
+
+class Screen
+{
+public:
+    int w;
+    int h;
+    float w_scale;
+    float h_scale;
+};
 
 class Engine
 {
@@ -22,6 +32,7 @@ public:
     int fps = 0;
     Text *fps_message;
     int keyboard[SDL_NUM_SCANCODES] = {0};
+    Screen screen;
 
     void init()
     {
@@ -36,6 +47,7 @@ public:
         _init_sdl_window_icon();
         _load_font();
         _init_fps_message();
+        _init_screen();
     };
 
     void destroy()
@@ -98,6 +110,18 @@ public:
         _refresh_fps_message_text();
         _refresh_fps_message_position();
         fps_message->draw();
+    }
+
+    void refresh_screen()
+    {
+        int w, h;
+        SDL_GetWindowSize(window, &w, &h);
+
+        screen.w_scale = (float)w / screen.w;
+        screen.h_scale = (float)h / screen.h;
+
+        screen.w = w;
+        screen.h = h;
     }
 
 private:
@@ -189,6 +213,13 @@ private:
         fps_message->color = {255, 255, 0, 0};
     }
 
+    void _init_screen()
+    {
+        SDL_GetWindowSize(window, &screen.w, &screen.h);
+        screen.w_scale = 1.0;
+        screen.h_scale = 1.0;
+    }
+
     void _refresh_fps_message_text()
     {
         char fps_text[20];
@@ -198,9 +229,7 @@ private:
 
     void _refresh_fps_message_position()
     {
-        int window_width, window_height;
-        SDL_GetWindowSize(window, &window_width, &window_height);
-        fps_message->dest.x = window_width - fps_message->dest.w;
+        fps_message->dest.x = screen.w - fps_message->dest.w;
     }
 
     void _destroy_sdl_image()

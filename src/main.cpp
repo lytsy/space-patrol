@@ -17,8 +17,8 @@ int main(int argc, char **argv)
     Background background("assets/images/backgrounds/bg_0.jpg", engine.renderer, engine.window);
 
     Bullet_list *bullet_list = new Bullet_list();
-    Enemy_list *enemy_list = new Enemy_list(engine.renderer, engine.window, bullet_list);
-    Player player(engine.renderer, engine.window, bullet_list);
+    Enemy_list *enemy_list = new Enemy_list(engine.renderer, engine.window, &engine.screen, bullet_list);
+    Player player(engine.renderer, engine.window, &engine.screen, bullet_list);
 
     while (engine.running)
     {
@@ -28,6 +28,7 @@ int main(int argc, char **argv)
         engine.check_errors();
         engine.count_delta_time();
         engine.count_fps();
+        engine.refresh_screen();
 
         player.handle_keypress(engine.keyboard, engine.dt);
 

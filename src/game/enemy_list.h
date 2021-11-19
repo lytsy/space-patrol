@@ -6,16 +6,18 @@ class Enemy_list
 {
 public:
     Enemy *head = NULL;
-    Enemy_list(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Bullet_list *list)
+
+    Enemy_list(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen, Bullet_list *list)
     {
         window = sdl_window;
         renderer = sdl_renderer;
         bullet_list = list;
+        screen = engine_screen;
     }
 
     void add_enemy()
     {
-        Enemy *tmp = new Enemy(renderer, window, bullet_list);
+        Enemy *tmp = new Enemy(renderer, window, screen, bullet_list);
         tmp->next = NULL;
 
         if (head == NULL)
@@ -86,14 +88,12 @@ public:
         {
             return;
         }
-        int window_width, window_height;
-        SDL_GetWindowSize(window, &window_width, &window_height);
 
         while (current != NULL)
         {
             tmp = current;
             current = current->next;
-            if (tmp->y > window_height || tmp->hp <= 0)
+            if (tmp->y > screen->w || tmp->hp <= 0)
             {
                 delete_enemy(tmp);
             }
@@ -134,4 +134,5 @@ private:
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     Bullet_list *bullet_list = NULL;
+    Screen *screen;
 };

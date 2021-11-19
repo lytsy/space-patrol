@@ -21,18 +21,15 @@ Character_config PLAYER_BASE_CONFIG = {
 class Player : public Character
 {
 public:
-    Player(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Bullet_list *list) : Character(sdl_renderer, sdl_window, list, PLAYER_BASE_CONFIG)
+    Player(SDL_Renderer *sdl_renderer, SDL_Window *sdl_window, Screen *engine_screen, Bullet_list *list) : Character(sdl_renderer, sdl_window, engine_screen, list, PLAYER_BASE_CONFIG)
     {
         init_position();
     }
 
     void init_position()
     {
-        int window_width, window_height;
-        SDL_GetWindowSize(window, &window_width, &window_height);
-
-        x = (window_width / 2) - w / 2;
-        y = (1 - y_offset_relative) * window_height - h;
+        x = (screen->w / 2) - w / 2;
+        y = (1 - y_offset_relative) * screen->h - h;
     }
 
     void handle_keypress(int *keyboard, long dt)
@@ -64,17 +61,16 @@ public:
 
     void refresh(long dt)
     {
-        int window_width, window_height;
-        SDL_GetWindowSize(window, &window_width, &window_height);
+        on_resize();
 
         int new_x = x + dx * dt * x_speed;
-        if (new_x > 0 && new_x < window_width - w)
+        if (new_x > 0 && new_x < screen->w - w)
         {
             x = new_x;
         }
 
         int new_y = y + dy * dt * y_speed;
-        if (new_y > 0 && new_y < window_height - h)
+        if (new_y > 0 && new_y < screen->h - h)
         {
             y = new_y;
         }

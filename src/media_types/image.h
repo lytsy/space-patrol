@@ -17,12 +17,12 @@ public:
         _init_rect(&dest);
     }
 
-    void scale_to_width(int *w, int *h, SDL_Window *window, float relative_width)
+    void scale_to_relative_size(int *w, int *h, SDL_Window *window, float relative_width)
     {
         int window_width, window_height;
         SDL_GetWindowSize(window, &window_width, &window_height);
         float proportion = (float)src.h / src.w;
-        *w = window_width * relative_width;
+        *w = (window_width + window_height) * 0.5 * relative_width;
         *h = *w * proportion;
     }
 
