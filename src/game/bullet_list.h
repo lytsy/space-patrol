@@ -6,9 +6,9 @@ class Bullet_list
 public:
     Bullet *head = NULL;
 
-    void add_bullet(Window_State window_state, int nx, int ny, int dy)
+    void add_bullet(Window_State window_state, int nx, int ny, int dy, const char *owner_type)
     {
-        Bullet *tmp = new Bullet(window_state, nx, ny, dy);
+        Bullet *tmp = new Bullet(window_state, nx, ny, dy, owner_type);
         tmp->next = NULL;
 
         if (head == NULL)
@@ -78,7 +78,7 @@ public:
         {
             tmp = current;
             current = current->next;
-            if (tmp->y < 0 || tmp->y > tmp->screen->h || tmp->x < 0 || tmp->x > tmp->screen->w || tmp->hp <= 0)
+            if (tmp->is_need_destroy())
             {
                 delete_bullet(tmp);
             }

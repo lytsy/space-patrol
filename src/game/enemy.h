@@ -5,9 +5,11 @@
 #define ENEMY_RELATIVE_WIDTH 0.07
 #define ENEMY_RELOAD_TIME 500
 #define ENEMY_BULLET_DY 1
+#define ENEMY_PLAYER_TYPE "npc"
 
 Character_config ENEMY_BASE_CONFIG = {
     ENEMY_SPRITE_FILE,
+    ENEMY_PLAYER_TYPE,
     ENEMY_RELATIVE_WIDTH,
     ENEMY_RELOAD_TIME,
     ENEMY_BULLET_DY};
@@ -21,13 +23,13 @@ class Enemy : public Character
 {
 public:
     Enemy *next;
-    int hp = ENEMY_HP;
 
     Enemy(Window_State window_state, Bullet_list *list) : Character(window_state, list, ENEMY_BASE_CONFIG)
     {
         init_position();
         dx = rand() % 6 - 3;
         dy = rand() % 2 + 1;
+        hp = ENEMY_HP;
     }
 
     void init_position()
@@ -42,35 +44,6 @@ public:
         y += dy * dt * y_speed;
         x += dx * dt * x_speed;
         fire(dt);
-        init_size();
-    }
-
-    void check_collision(Bullet_list *bullet_list)
-    {
-        Bullet *bullet = bullet_list->head;
-        while (bullet != NULL)
-        {
-            bool is_left_top_collision = is_point_in_box(bullet->x, bullet->y, x, y, w, h);
-            bool is_right_top_collision = is_point_in_box(bullet->x + bullet->w, bullet->y, x, y, w, h);
-
-            if (is_left_top_collision || is_right_top_collision)
-            {
-                take_damage(bullet->damage);
-                bullet->take_damage(bullet->damage);
-            }
-
-            bullet = bullet->next;
-        }
-    }
-
-    bool is_point_in_box(int x, int y, int bx, int by, int bw, int bh)
-    {
-        return x > bx && (x < (bx + bw)) && y > by && (y < (by + bh));
-    }
-
-    void take_damage(int damage)
-    {
-        hp -= damage;
     }
 
 private:

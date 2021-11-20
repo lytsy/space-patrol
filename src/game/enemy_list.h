@@ -6,6 +6,7 @@ class Enemy_list
 {
 public:
     Enemy *head = NULL;
+    int length = 0;
 
     Enemy_list(Window_State win_state, Bullet_list *list)
     {
@@ -22,6 +23,7 @@ public:
         if (head == NULL)
         {
             head = tmp;
+            length++;
             return;
         }
 
@@ -31,6 +33,7 @@ public:
             current = current->next;
         }
         current->next = tmp;
+        length++;
     }
 
     void delete_enemy(Enemy *n)
@@ -51,6 +54,7 @@ public:
                 }
                 current->destroy();
                 free(current);
+                length--;
                 return;
             }
             prev = current;
@@ -68,6 +72,17 @@ public:
         }
     }
 
+    void spawn_enemys()
+    {
+        int must_be_enemys = 4;
+        int need_add_enemys = must_be_enemys - length;
+        while (need_add_enemys > 0)
+        {
+            add_enemy();
+            need_add_enemys--;
+        }
+    }
+
     void draw_enemys()
     {
         Enemy *current = head;
@@ -78,54 +93,19 @@ public:
         }
     }
 
-    void destroy_enemys()
+    void delete_dead_enemys()
     {
         Enemy *current = head;
         Enemy *tmp = NULL;
-
-        if (window_state.window == NULL)
-        {
-            return;
-        }
 
         while (current != NULL)
         {
             tmp = current;
             current = current->next;
-            if (tmp->y > screen->w || tmp->hp <= 0)
+            if (tmp->is_need_destroy())
             {
                 delete_enemy(tmp);
             }
-        }
-    }
-
-    void spawn_enemys()
-    {
-        int enemys_counter = 0;
-        Enemy *current = head;
-        while (current != NULL)
-        {
-            enemys_counter++;
-            current = current->next;
-        }
-
-        int must_be_enemys = 4;
-
-        int need_add_enemys = must_be_enemys - enemys_counter;
-        while (need_add_enemys > 0)
-        {
-            need_add_enemys--;
-            add_enemy();
-        }
-    }
-
-    void check_collision(Bullet_list *bullet_list)
-    {
-        Enemy *enemy = head;
-        while (enemy != NULL)
-        {
-            enemy->check_collision(bullet_list);
-            enemy = enemy->next;
         }
     }
 

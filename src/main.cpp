@@ -6,6 +6,7 @@
 #include "game/player.h"
 #include "game/bullet_list.h"
 #include "game/enemy_list.h"
+#include "game/game.h"
 
 int main(int argc, char **argv)
 {
@@ -19,6 +20,8 @@ int main(int argc, char **argv)
     Bullet_list *bullet_list = new Bullet_list();
     Enemy_list *enemy_list = new Enemy_list(engine.window_state, bullet_list);
     Player player(engine.window_state, bullet_list);
+
+    Game *game = new Game();
 
     while (engine.running)
     {
@@ -34,12 +37,13 @@ int main(int argc, char **argv)
 
         background.refresh(engine.dt);
         player.refresh(engine.dt);
+        game->collisions(player, bullet_list, enemy_list);
+
         bullet_list->refresh_bullets_positions(engine.dt);
         bullet_list->destroy_remote_bullets();
         enemy_list->spawn_enemys();
         enemy_list->refresh_enemys_positions(engine.dt);
-        enemy_list->destroy_enemys();
-        enemy_list->check_collision(bullet_list);
+        enemy_list->delete_dead_enemys();
 
         background.draw();
         enemy_list->draw_enemys();

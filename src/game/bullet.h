@@ -11,8 +11,9 @@ public:
     int dy;
     int damage = 1;
     int hp = 1;
+    const char *owner_type;
 
-    Bullet(Window_State window_state, int nx, int ny, int ndy)
+    Bullet(Window_State window_state, int nx, int ny, int ndy, const char *owner)
     {
         window = window_state.window;
         screen = window_state.screen;
@@ -22,8 +23,8 @@ public:
         init_dest_size();
         x = nx - w * 0.5;
         y = ny;
-
         dy = ndy;
+        owner_type = owner;
     }
 
     void init_src_size()
@@ -49,9 +50,14 @@ public:
         image->draw(x, y, w, h);
     }
 
-    void take_damage(int damage)
+    void on_collide()
     {
         hp -= damage;
+    }
+
+    bool is_need_destroy()
+    {
+        return y < 0 || y > screen->h || x < 0 || x > screen->w || hp <= 0;
     }
 
     void on_resize()

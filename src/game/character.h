@@ -2,11 +2,13 @@
 #include "../engine/engine.h"
 #include "../media_types/image.h"
 #include "bullet_list.h"
+#include "../engine/collider.h"
 
 class Character_config
 {
 public:
     const char *file;
+    const char *type;
     float relative_width;
     int reload;
     int bullet_dy;
@@ -17,8 +19,10 @@ class Character
 public:
     int x, y, w, h;
     int dx, dy;
+    int hp, damage;
     Image *image;
     Screen *screen;
+    const char *type;
 
     Character(Window_State win_state, Bullet_list *list, Character_config config)
     {
@@ -27,6 +31,7 @@ public:
         screen = win_state.screen;
         bullet_list = list;
         image = new Image(config.file, win_state.renderer);
+        type = config.type;
         relative_width = config.relative_width;
         reload_time = config.reload;
         current_reload_time = reload_time;
@@ -34,14 +39,14 @@ public:
         init_size();
     }
 
-    void draw()
-    {
-        image->draw(x, y, w, h);
-    }
-
     void init_size()
     {
         image->scale_to_relative_size(&w, &h, window_state.window, relative_width);
+    }
+
+    void draw()
+    {
+        image->draw(x, y, w, h);
     }
 
     void fire(long dt)
@@ -57,20 +62,19 @@ public:
     void create_bullet()
     {
         int bullet_y;
-        int bullet_offset_y = 5;
         int bullet_x = x + w * 0.5;
 
         if (bullet_dy < 0)
         {
-            bullet_y = y - bullet_offset_y;
+            bullet_y = y - h * 0.55;
         }
 
         if (bullet_dy > 0)
         {
-            bullet_y = y + h + bullet_offset_y;
+            bullet_y = y + h * 1.1;
         }
 
-        bullet_list->add_bullet(window_state, bullet_x, bullet_y, bullet_dy);
+        bullet_list->add_bullet(window_state, bullet_x, bullet_y, bullet_dy, type);
     }
 
     void on_resize()
@@ -83,6 +87,30 @@ public:
             h *= screen->h_scale;
             speed *= screen->w_scale * screen->h_scale;
         }
+    }
+
+    bool is_colllided(Bullet *bullet)
+    {
+        if (strcmp(type, bullet->owner_type) == 0)
+        {
+            return false;
+        }
+        return Collider::is_collision(bullet->x, bullet->y, bullet->w, bullet->h, x, y, w, h);
+    }
+
+    void on_collide(Bullet *bullet)
+    {
+        hp -= bullet->damage;
+    }
+
+    bool is_damage_was_lethal(Bullet *bullet)
+    {
+        return hp <= 0 && hp + bullet->damage > 0;
+    }
+
+    bool is_need_destroy()
+    {
+        return y > screen->h || hp <= 0;
     }
 
     void destroy()

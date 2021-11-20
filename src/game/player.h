@@ -1,4 +1,5 @@
 
+#pragma once
 #include "character.h"
 
 // Base class config
@@ -6,9 +7,11 @@
 #define PLAYER_RELATIVE_WIDTH 0.1
 #define PLAYER_RELOAD_TIME 300
 #define PLAYER_BULLET_DY -1
+#define PLAYER_TYPE "player"
 
 Character_config PLAYER_BASE_CONFIG = {
     PLAYER_SPRITE_FILE,
+    PLAYER_TYPE,
     PLAYER_RELATIVE_WIDTH,
     PLAYER_RELOAD_TIME,
     PLAYER_BULLET_DY};
