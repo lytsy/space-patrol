@@ -22,12 +22,14 @@ public:
     int hp, damage;
     Image *image;
     Screen *screen;
+    SDL_Renderer *renderer;
     const char *type;
 
     Character(Window_State win_state, Bullet_list *list, Character_config config)
     {
         window_state = win_state;
         window = win_state.window;
+        renderer = win_state.renderer;
         screen = win_state.screen;
         bullet_list = list;
         image = new Image(config.file, win_state.renderer);

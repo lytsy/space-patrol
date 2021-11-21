@@ -27,6 +27,7 @@ public:
     Player(Window_State window_state, Bullet_list *list) : Character(window_state, list, PLAYER_BASE_CONFIG)
     {
         init_position();
+        hp = 20;
     }
 
     void init_position()
@@ -79,8 +80,45 @@ public:
         }
     }
 
+    void draw()
+    {
+        Character::draw();
+        draw_hp();
+    }
+
+    void draw_hp()
+    {
+        SDL_Rect dest;
+        float size = w * hp_bar_size_relative;
+        float offset = size * hp_bar_size_relative;
+        float offset_from_player = h * hp_bar_size_relative;
+
+        for (int i = 0; i < max_hp; i++)
+        {
+            dest.x = x + (i % 10) * size + offset;
+            dest.y = y + h + ceil(i / 10) * size + offset + offset_from_player;
+            dest.w = size - offset;
+            dest.h = size - offset;
+
+            if (hp >= i)
+            {
+                SDL_SetRenderDrawColor(renderer, hp_full.r, hp_full.g, hp_full.b, hp_full.a);
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(renderer, hp_empty.r, hp_empty.g, hp_empty.b, hp_empty.a);
+            }
+
+            SDL_RenderFillRect(renderer, &dest);
+        }
+    }
+
 private:
     float y_offset_relative = PLAYER_Y_OFFSET_RELATIVE;
     float x_speed = PLAYER_X_SPEED;
     float y_speed = PLAYER_Y_SPEED;
+    int max_hp = 20;
+    float hp_bar_size_relative = 0.1;
+    SDL_Color hp_full = {0, 255, 200};
+    SDL_Color hp_empty = {122, 122, 122};
 };
