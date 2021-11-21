@@ -109,6 +109,19 @@ public:
         }
     }
 
+    void destroy()
+    {
+        Enemy *current = head;
+        Enemy *tmp = NULL;
+
+        while (current != NULL)
+        {
+            tmp = current;
+            current = current->next;
+            delete_enemy(tmp);
+        }
+    }
+
 private:
     Window_State window_state;
     Screen *screen;

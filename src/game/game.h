@@ -52,6 +52,8 @@ public:
     {
         background->destroy();
         player->destroy();
+        enemy_list->destroy();
+        bullet_list->destroy();
     }
 
     void collisions()

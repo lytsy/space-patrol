@@ -84,4 +84,17 @@ public:
             }
         }
     }
+
+    void destroy()
+    {
+        Bullet *current = head;
+        Bullet *tmp = NULL;
+
+        while (current != NULL)
+        {
+            tmp = current;
+            current = current->next;
+            delete_bullet(tmp);
+        }
+    }
 };
