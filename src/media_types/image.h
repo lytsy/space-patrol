@@ -28,11 +28,14 @@ public:
 
     void draw(int x, int y, int w, int h)
     {
-        dest.x = x;
-        dest.y = y;
-        dest.w = w;
-        dest.h = h;
+        _set_dest(x, y, w, h);
         SDL_RenderCopy(renderer, texture, &src, &dest);
+    };
+
+    void draw(int x, int y, int w, int h, double rotation)
+    {
+        _set_dest(x, y, w, h);
+        SDL_RenderCopyEx(renderer, texture, &src, &dest, rotation, NULL, SDL_FLIP_NONE);
     };
 
     void destroy()
@@ -65,5 +68,13 @@ private:
         rect->x = 0;
         rect->y = 0;
         SDL_QueryTexture(texture, NULL, NULL, &rect->w, &rect->h);
+    }
+
+    void _set_dest(int x, int y, int w, int h)
+    {
+        dest.x = x;
+        dest.y = y;
+        dest.w = w;
+        dest.h = h;
     }
 };

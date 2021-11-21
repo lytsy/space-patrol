@@ -12,6 +12,7 @@ public:
     int damage = 1;
     int hp = 1;
     const char *owner_type;
+    double rotation = 180.0;
 
     Bullet(Window_State window_state, int nx, int ny, int ndy, const char *owner)
     {
@@ -47,6 +48,11 @@ public:
 
     void draw()
     {
+        if (strcmp(owner_type, "npc") == 0)
+        {
+            image->draw(x, y, w, h, rotation);
+            return;
+        }
         image->draw(x, y, w, h);
     }
 
