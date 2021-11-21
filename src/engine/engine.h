@@ -11,6 +11,9 @@
 #include "console.h"
 #include "events.h"
 
+#define FPS_MESSAGE_LINE_POSITION 1
+#define MESSAGES_OFFSET_RELATIVE 0.01
+
 class Screen
 {
 public:
@@ -240,13 +243,14 @@ private:
     void _refresh_fps_message_text()
     {
         char fps_text[20];
-        sprintf(fps_text, "fps %d ", fps);
+        sprintf(fps_text, "fps %d", fps);
         fps_message->set_message(fps_text);
     }
 
     void _refresh_fps_message_position()
     {
-        fps_message->dest.x = screen.w - fps_message->dest.w;
+        fps_message->dest.x = (1 - MESSAGES_OFFSET_RELATIVE) * screen.w - fps_message->dest.w;
+        fps_message->dest.y = FPS_MESSAGE_LINE_POSITION * fps_message->dest.h;
     }
 
     void _destroy_sdl_image()

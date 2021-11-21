@@ -10,7 +10,7 @@ int main(int argc, char **argv)
     Sound test_sound("assets/sound.mp3");
     test_sound.play();
 
-    Game *game = new Game(engine.window_state);
+    Game *game = new Game(engine.window_state, engine.font);
 
     while (engine.running)
     {

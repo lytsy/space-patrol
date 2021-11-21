@@ -46,6 +46,13 @@ public:
         SDL_RenderCopy(renderer, texture, NULL, &dest);
     };
 
+    void draw(int x, int y)
+    {
+        dest.x = x;
+        dest.y = y;
+        SDL_RenderCopy(renderer, texture, NULL, &dest);
+    };
+
     void destroy()
     {
         SDL_DestroyTexture(texture);
