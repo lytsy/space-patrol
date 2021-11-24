@@ -46,19 +46,19 @@ public:
         dx = 0;
         dy = 0;
 
-        if (keyboard[SDL_SCANCODE_RIGHT] == 1)
+        if (keyboard[SDL_SCANCODE_RIGHT] == 1 || keyboard[SDL_SCANCODE_D] == 1)
         {
             dx = 1;
         }
-        if (keyboard[SDL_SCANCODE_LEFT] == 1)
+        if (keyboard[SDL_SCANCODE_LEFT] == 1 || keyboard[SDL_SCANCODE_A] == 1)
         {
             dx = -1;
         }
-        if (keyboard[SDL_SCANCODE_DOWN] == 1)
+        if (keyboard[SDL_SCANCODE_DOWN] == 1 || keyboard[SDL_SCANCODE_S] == 1)
         {
             dy = 1;
         }
-        if (keyboard[SDL_SCANCODE_UP] == 1)
+        if (keyboard[SDL_SCANCODE_UP] == 1 || keyboard[SDL_SCANCODE_W] == 1)
         {
             dy = -1;
         }
