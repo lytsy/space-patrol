@@ -2,6 +2,7 @@
 #include "background.h"
 #include "bullet_list.h"
 #include "enemy_list.h"
+#include "effect_list.h"
 #include "player.h"
 #include "result_screen.h"
 
@@ -22,6 +23,7 @@ public:
         background = new Background(window_state);
         bullet_list = new Bullet_list();
         enemy_list = new Enemy_list(window_state, bullet_list);
+        effect_list = new Effect_list(window_state);
         player = new Player(window_state, bullet_list);
         font = engine_font;
 
@@ -90,6 +92,9 @@ public:
         enemy_list->delete_dead_enemys();
         enemy_list->spawn_enemys();
 
+        effect_list->refresh(dt);
+        effect_list->destroy_done();
+
         _create_text_from_pattern(score_message, "score: %d", score);
         _create_text_from_pattern(level_message, "level: %d", level);
         _refresh_hints_position();
@@ -97,12 +102,12 @@ public:
 
     void draw_game_scene()
     {
-
         background->draw();
         hints->draw();
         enemy_list->draw_enemys();
         bullet_list->draw_bullets();
         player->draw();
+        effect_list->draw();
         _draw_line(level_message, 0);
         _draw_line(score_message, 1);
     }
@@ -141,9 +146,10 @@ private:
     Background *background;
     Bullet_list *bullet_list;
     Enemy_list *enemy_list;
+    Effect_list *effect_list;
     Player *player;
     int score = 0;
-    int score_to_win = 1;
+    int score_to_win = 4;
     int level = 1;
 
     void collisions()
@@ -173,9 +179,13 @@ private:
             character->on_collide(bullet);
             bullet->on_collide();
             bool is_player_shoot = strcmp(bullet->owner_type, "player") == 0;
-            if (character->is_damage_was_lethal(bullet) && is_player_shoot)
+            if (character->is_damage_was_lethal(bullet))
             {
-                score++;
+                effect_list->add(character->x, character->y, character->dy);
+                if (is_player_shoot)
+                {
+                    score++;
+                }
             }
         }
     }
@@ -241,5 +251,6 @@ private:
         score = 0;
         enemy_list->destroy();
         bullet_list->destroy();
+        effect_list->destroy();
     }
 };
