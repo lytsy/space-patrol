@@ -41,8 +41,8 @@ public:
 
     void refresh(long dt)
     {
-        on_resize();
-        y += dy * dt * speed;
+        y += dy * dt * speed * screen->h;
+        screen->on_resize_scale(&x, &y, &w, &h);
         init_dest_size();
     }
 
@@ -66,18 +66,6 @@ public:
         return y < 0 || y > screen->h || x < 0 || x > screen->w || hp <= 0;
     }
 
-    void on_resize()
-    {
-        if (screen->w_scale != 1.0 || screen->h_scale != 1.0)
-        {
-            x *= screen->w_scale;
-            w *= screen->w_scale;
-            y *= screen->h_scale;
-            h *= screen->h_scale;
-            speed *= screen->w_scale * screen->h_scale;
-        }
-    }
-
     void destroy()
     {
         image->destroy();
@@ -85,7 +73,7 @@ public:
 
 private:
     SDL_Window *window;
-    float speed = 0.4;
+    float speed = 0.0008;
     const char *file_name = "assets/images/bullets/player_bullet.png";
     float relative_width = 0.03;
     int frame_size = 64;

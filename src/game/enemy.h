@@ -15,8 +15,8 @@ Character_config ENEMY_BASE_CONFIG = {
     ENEMY_BULLET_DY};
 
 //  Enemy config
-#define ENEMY_X_SPEED 0.02
-#define ENEMY_Y_SPEED 0.15
+#define ENEMY_X_SPEED 0.00004
+#define ENEMY_Y_SPEED 0.00030
 #define ENEMY_HP 2
 
 class Enemy : public Character
@@ -41,8 +41,8 @@ public:
     void refresh(long dt)
     {
         on_resize();
-        y += dy * dt * y_speed;
-        x += dx * dt * x_speed;
+        y += dy * dt * y_speed * screen->h;
+        x += dx * dt * x_speed * screen->w;
         fire(dt);
     }
 

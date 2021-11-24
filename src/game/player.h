@@ -17,8 +17,8 @@ Character_config PLAYER_BASE_CONFIG = {
     PLAYER_BULLET_DY};
 
 // Player config
-#define PLAYER_X_SPEED 0.2
-#define PLAYER_Y_SPEED 0.2
+#define PLAYER_X_SPEED 0.0003
+#define PLAYER_Y_SPEED 0.0003
 #define PLAYER_Y_OFFSET_RELATIVE 0.05
 
 class Player : public Character
@@ -72,13 +72,13 @@ public:
     {
         on_resize();
 
-        int new_x = x + dx * dt * x_speed;
+        int new_x = x + dx * dt * x_speed * screen->w;
         if (new_x > 0 && new_x < screen->w - w)
         {
             x = new_x;
         }
 
-        int new_y = y + dy * dt * y_speed;
+        int new_y = y + dy * dt * y_speed * screen->h;
         if (new_y > 0 && new_y < screen->h - h)
         {
             y = new_y;

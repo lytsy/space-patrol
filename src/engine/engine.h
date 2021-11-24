@@ -21,6 +21,17 @@ public:
     int h;
     float w_scale;
     float h_scale;
+
+    void on_resize_scale(int *obj_x, int *obj_y, int *obj_w, int *obj_h)
+    {
+        if (w_scale != 1.0 || h_scale != 1.0)
+        {
+            *obj_x *= w_scale;
+            *obj_w *= w_scale;
+            *obj_y *= h_scale;
+            *obj_h *= h_scale;
+        }
+    }
 };
 
 class Window_State

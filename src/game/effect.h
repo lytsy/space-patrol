@@ -34,8 +34,8 @@ public:
 
     void refresh(long dt)
     {
-        on_resize();
-        y += dy * dt * speed;
+        screen->on_resize_scale(&x, &y, &w, &h);
+        y += dy * dt * speed * screen->h;
         refresh_animation_state(dt);
         init_dest_size();
     }
@@ -67,18 +67,6 @@ public:
         image->src.y = ceil((float)animation_step / 3) * frame_size;
     }
 
-    void on_resize()
-    {
-        if (screen->w_scale != 1.0 || screen->h_scale != 1.0)
-        {
-            x *= screen->w_scale;
-            w *= screen->w_scale;
-            y *= screen->h_scale;
-            h *= screen->h_scale;
-            speed *= screen->w_scale * screen->h_scale;
-        }
-    }
-
     void destroy()
     {
         image->destroy();
@@ -86,7 +74,7 @@ public:
 
 private:
     SDL_Window *window;
-    float speed = 0.1;
+    float speed = 0.0002;
     const char *file_name = "assets/images/effects/effect.png";
     float relative_width = 0.1;
     int frame_size = 341;
