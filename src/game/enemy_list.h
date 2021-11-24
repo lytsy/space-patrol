@@ -7,6 +7,7 @@ class Enemy_list
 public:
     Enemy *head = NULL;
     int length = 0;
+    int max_length = 4;
 
     Enemy_list(Window_State win_state, Bullet_list *list)
     {
@@ -74,8 +75,7 @@ public:
 
     void spawn_enemys()
     {
-        int must_be_enemys = 4;
-        int need_add_enemys = must_be_enemys - length;
+        int need_add_enemys = max_length - length;
         while (need_add_enemys > 0)
         {
             add_enemy();

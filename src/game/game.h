@@ -14,14 +14,6 @@
 class Game
 {
 public:
-    int score = 0;
-    int score_to_win = 1;
-    int level = 1;
-    Background *background;
-    Bullet_list *bullet_list;
-    Enemy_list *enemy_list;
-    Player *player;
-
     Game(Window_State window_state, TTF_Font *engine_font)
     {
         renderer = window_state.renderer;
@@ -41,14 +33,14 @@ public:
     {
         if (is_win() && keyboard[SDL_SCANCODE_RETURN] == 1)
         {
-            level++;
-            reset_level();
+            _next_level();
+            _reset_level();
             keyboard[SDL_SCANCODE_RETURN] = 0;
         }
 
         if (is_defeat() && keyboard[SDL_SCANCODE_RETURN] == 1)
         {
-            reset_level();
+            _reset_level();
             keyboard[SDL_SCANCODE_RETURN] = 0;
         }
 
@@ -141,6 +133,13 @@ private:
     SDL_Renderer *renderer;
     Screen *screen;
     Result_Screen *result_screen;
+    Background *background;
+    Bullet_list *bullet_list;
+    Enemy_list *enemy_list;
+    Player *player;
+    int score = 0;
+    int score_to_win = 1;
+    int level = 1;
 
     void collisions()
     {
@@ -205,7 +204,20 @@ private:
         text->draw(message_x, message_y);
     }
 
-    void reset_level()
+    void _next_level()
+    {
+        level++;
+        if (level % 2 == 0)
+        {
+            score_to_win++;
+        }
+        if (level % 3 == 0)
+        {
+            enemy_list->max_length++;
+        }
+    }
+
+    void _reset_level()
     {
         player->init();
         score = 0;
