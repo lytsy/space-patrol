@@ -23,7 +23,6 @@ public:
     void set_message(const char *msg)
     {
         message = (char *)msg;
-        SDL_DestroyTexture(texture);
         _init_texture();
         _init_dest();
     }
@@ -53,6 +52,23 @@ public:
         SDL_RenderCopy(renderer, texture, NULL, &dest);
     };
 
+    void scale_dest_to_width(int width)
+    {
+        _init_dest();
+        float proportion = (float)dest.h / dest.w;
+        dest.w = width;
+        dest.h = width * proportion;
+    }
+
+    void set_color(int r, int g, int b, int a)
+    {
+        color.r = r;
+        color.g = g;
+        color.b = b;
+        color.a = a;
+        _init_texture();
+    }
+
     void destroy()
     {
         SDL_DestroyTexture(texture);
@@ -62,16 +78,21 @@ private:
     char *message;
     SDL_Renderer *renderer;
     TTF_Font *font;
-    SDL_Texture *texture;
+    SDL_Texture *texture = NULL;
 
     void _init_texture()
     {
         SDL_Surface *surface = TTF_RenderText_Blended(font, message, color);
+        if (texture)
+        {
+            SDL_DestroyTexture(texture);
+        }
         texture = SDL_CreateTextureFromSurface(renderer, surface);
         if (!texture)
         {
             printf("Failed CreateTexture: %s\n", SDL_GetError());
         }
+
         SDL_FreeSurface(surface);
     };
 

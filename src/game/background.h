@@ -1,11 +1,14 @@
 
 /* Draw infinite background repeated by X and Y. */
+#pragma once
 #include "../media_types/image.h"
 #include <math.h>
 
 class Background
 {
 public:
+    float speed = 0.1;
+
     Background(Window_State window_state)
     {
         window = window_state.window;
@@ -52,7 +55,6 @@ private:
     Image *image;
     SDL_Window *window;
     Screen *screen;
-    float speed = 0.1;
     int x, y, w, h;
     const char *file = "assets/images/backgrounds/bg_0.jpg";
 };

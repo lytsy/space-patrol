@@ -26,7 +26,11 @@ int main(int argc, char **argv)
         game->refresh(engine.dt);
 
         game->draw();
-        engine.draw_fps();
+
+        if (game->is_play())
+        {
+            engine.draw_fps();
+        }
         engine.render_present();
         SDL_Delay(5);
     }

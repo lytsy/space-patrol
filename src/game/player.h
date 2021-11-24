@@ -26,6 +26,11 @@ class Player : public Character
 public:
     Player(Window_State window_state, Bullet_list *list) : Character(window_state, list, PLAYER_BASE_CONFIG)
     {
+        init();
+    }
+
+    void init()
+    {
         init_position();
         hp = 20;
     }
