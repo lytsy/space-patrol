@@ -10,6 +10,7 @@
 #define VICTORY_TIP "Press Enter to start next level."
 #define DEFEAT_MESSAGE "Defeat"
 #define DEFEAT_TIP "Press Enter to restart level."
+#define HINTS_MESSAGE "move(arrows) fire(space) "
 
 class Game
 {
@@ -26,6 +27,7 @@ public:
 
         _init_score();
         _init_level();
+        _init_hints();
         result_screen = new Result_Screen(window_state, engine_font);
     }
 
@@ -90,12 +92,14 @@ public:
 
         _create_text_from_pattern(score_message, "score: %d", score);
         _create_text_from_pattern(level_message, "level: %d", level);
+        _refresh_hints_position();
     }
 
     void draw_game_scene()
     {
 
         background->draw();
+        hints->draw();
         enemy_list->draw_enemys();
         bullet_list->draw_bullets();
         player->draw();
@@ -129,6 +133,7 @@ public:
 private:
     Text *score_message;
     Text *level_message;
+    Text *hints;
     TTF_Font *font;
     SDL_Renderer *renderer;
     Screen *screen;
@@ -185,6 +190,19 @@ private:
     {
         level_message = new Text("level: ", renderer, font);
         level_message->color = {70, 255, 70, 0};
+    }
+
+    void _init_hints()
+    {
+        hints = new Text(HINTS_MESSAGE, renderer, font);
+        hints->set_color(100, 200, 100, 0);
+        _refresh_hints_position();
+    }
+
+    void _refresh_hints_position()
+    {
+        hints->dest.y = screen->h - hints->dest.h * 1.2;
+        hints->dest.x = screen->w - hints->dest.w;
     }
 
     void _create_text_from_pattern(Text *text, const char *pattern, int number)
