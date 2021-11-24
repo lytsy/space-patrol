@@ -62,6 +62,7 @@ private:
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(renderer, 121, 67, 87, 80);
         SDL_RenderFillRect(renderer, NULL);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     }
 
     void _draw_messages()
