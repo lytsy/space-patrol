@@ -33,6 +33,7 @@ public:
         font = engine_font;
 
         _init_score();
+        _init_level();
         result_screen = new Result_Screen(window_state, engine_font);
     }
 
@@ -95,7 +96,8 @@ public:
         enemy_list->delete_dead_enemys();
         enemy_list->spawn_enemys();
 
-        _refresh_score_message();
+        _create_text_from_pattern(score_message, "score: %d", score);
+        _create_text_from_pattern(level_message, "level: %d", level);
     }
 
     void draw_game_scene()
@@ -105,7 +107,8 @@ public:
         enemy_list->draw_enemys();
         bullet_list->draw_bullets();
         player->draw();
-        _draw_score();
+        _draw_line(level_message, 0);
+        _draw_line(score_message, 1);
     }
 
     bool is_win()
@@ -133,6 +136,7 @@ public:
 
 private:
     Text *score_message;
+    Text *level_message;
     TTF_Font *font;
     SDL_Renderer *renderer;
     Screen *screen;
@@ -178,22 +182,27 @@ private:
         score_message->color = {70, 255, 70, 0};
     }
 
-    void _refresh_score_message()
+    void _init_level()
     {
-        const char *pattern = "score: %d";
-        int length = snprintf(NULL, 0, pattern, score);
-        char *str = (char *)malloc(length + 1);
-        snprintf(str, length + 1, pattern, score);
+        level_message = new Text("level: ", renderer, font);
+        level_message->color = {70, 255, 70, 0};
+    }
 
-        score_message->set_message(str);
+    void _create_text_from_pattern(Text *text, const char *pattern, int number)
+    {
+        int length = snprintf(NULL, 0, pattern, number);
+        char *str = (char *)malloc(length + 1);
+        snprintf(str, length + 1, pattern, number);
+
+        text->set_message(str);
         free(str);
     }
 
-    void _draw_score()
+    void _draw_line(Text *text, int line)
     {
-        int message_x = (1 - MESSAGES_OFFSET_RELATIVE) * screen->w - score_message->dest.w;
-        int message_y = 0;
-        score_message->draw(message_x, message_y);
+        int message_x = (1 - MESSAGES_OFFSET_RELATIVE) * screen->w - text->dest.w;
+        int message_y = text->dest.h * line;
+        text->draw(message_x, message_y);
     }
 
     void reset_level()
