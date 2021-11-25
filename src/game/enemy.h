@@ -26,16 +26,10 @@ public:
 
     Enemy(Window_State window_state, Bullet_list *list) : Character(window_state, list, ENEMY_BASE_CONFIG)
     {
-        init_position();
+        _init_position();
         dx = rand() % 6 - 3;
         dy = rand() % 2 + 1;
         hp = ENEMY_HP;
-    }
-
-    void init_position()
-    {
-        x = rand() % (screen->w - w) + w * 0.5;
-        y = rand() % screen->h * 0.3 * -1;
     }
 
     void refresh(long dt)
@@ -49,4 +43,10 @@ public:
 private:
     float x_speed = ENEMY_X_SPEED;
     float y_speed = ENEMY_Y_SPEED;
+
+    void _init_position()
+    {
+        x = rand() % (screen->w - w) + w * 0.5;
+        y = rand() % screen->h * 0.3 * -1;
+    }
 };

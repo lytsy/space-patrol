@@ -35,14 +35,14 @@ public:
 
     void handle_events(long dt, int *keyboard)
     {
-        if (is_win() && keyboard[SDL_SCANCODE_RETURN] == 1)
+        if (_is_win() && keyboard[SDL_SCANCODE_RETURN] == 1)
         {
             _next_level();
             _reset_level();
             keyboard[SDL_SCANCODE_RETURN] = 0;
         }
 
-        if (is_defeat() && keyboard[SDL_SCANCODE_RETURN] == 1)
+        if (_is_defeat() && keyboard[SDL_SCANCODE_RETURN] == 1)
         {
             _reset_level();
             keyboard[SDL_SCANCODE_RETURN] = 0;
@@ -53,78 +53,35 @@ public:
 
     void refresh(long dt)
     {
-        if (is_win())
+        if (_is_win())
         {
             result_screen->refresh(VICTORY_MESSAGE, score, VICTORY_TIP);
             return;
         }
 
-        if (is_defeat())
+        if (_is_defeat())
         {
             result_screen->refresh(DEFEAT_MESSAGE, score, DEFEAT_TIP);
             return;
         }
 
-        refresh_game_scene(dt);
+        _refresh_game_scene(dt);
     }
 
     void draw()
     {
-        if (is_win() || is_defeat())
+        if (_is_win() || _is_defeat())
         {
             result_screen->draw();
             return;
         }
 
-        draw_game_scene();
-    }
-
-    void refresh_game_scene(long dt)
-    {
-        background->refresh(dt);
-        player->refresh(engine.dt);
-        collisions();
-
-        bullet_list->refresh_bullets_positions(dt);
-        bullet_list->destroy_remote_bullets();
-
-        enemy_list->refresh_enemys_positions(dt);
-        enemy_list->delete_dead_enemys();
-        enemy_list->spawn_enemys();
-
-        effect_list->refresh(dt);
-        effect_list->destroy_done();
-
-        _create_text_from_pattern(score_message, "score: %d", score);
-        _create_text_from_pattern(level_message, "level: %d", level);
-        _refresh_hints_position();
-    }
-
-    void draw_game_scene()
-    {
-        background->draw();
-        hints->draw();
-        enemy_list->draw_enemys();
-        bullet_list->draw_bullets();
-        player->draw();
-        effect_list->draw();
-        _draw_line(level_message, 0);
-        _draw_line(score_message, 1);
-    }
-
-    bool is_win()
-    {
-        return score >= score_to_win;
-    }
-
-    bool is_defeat()
-    {
-        return player->hp <= 0;
+        _draw_game_scene();
     }
 
     bool is_play()
     {
-        return !is_win() && !is_defeat();
+        return !_is_win() && !_is_defeat();
     }
 
     void destroy()
@@ -152,7 +109,50 @@ private:
     int score_to_win = 4;
     int level = 1;
 
-    void collisions()
+    void _refresh_game_scene(long dt)
+    {
+        background->refresh(dt);
+        player->refresh(engine.dt);
+        _collisions();
+
+        bullet_list->refresh_bullets_positions(dt);
+        bullet_list->destroy_remote_bullets();
+
+        enemy_list->refresh_enemys_positions(dt);
+        enemy_list->delete_dead_enemys();
+        enemy_list->spawn_enemys();
+
+        effect_list->refresh(dt);
+        effect_list->destroy_done();
+
+        _create_text_from_pattern(score_message, "score: %d", score);
+        _create_text_from_pattern(level_message, "level: %d", level);
+        _refresh_hints_position();
+    }
+
+    void _draw_game_scene()
+    {
+        background->draw();
+        hints->draw();
+        enemy_list->draw_enemys();
+        bullet_list->draw_bullets();
+        player->draw();
+        effect_list->draw();
+        _draw_line(level_message, 0);
+        _draw_line(score_message, 1);
+    }
+
+    bool _is_win()
+    {
+        return score >= score_to_win;
+    }
+
+    bool _is_defeat()
+    {
+        return player->hp <= 0;
+    }
+
+    void _collisions()
     {
         Enemy *enemy;
         Bullet *bullet;
@@ -160,18 +160,18 @@ private:
         bullet = bullet_list->head;
         while (bullet != NULL)
         {
-            process_collision(player, bullet);
+            _process_collision(player, bullet);
             enemy = enemy_list->head;
             while (enemy != NULL)
             {
-                process_collision(enemy, bullet);
+                _process_collision(enemy, bullet);
                 enemy = enemy->next;
             }
             bullet = bullet->next;
         }
     }
 
-    void process_collision(Character *character, Bullet *bullet)
+    void _process_collision(Character *character, Bullet *bullet)
     {
         bool collided = character->is_colllided(bullet);
         if (collided)

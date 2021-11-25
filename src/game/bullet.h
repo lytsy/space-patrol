@@ -20,30 +20,19 @@ public:
         screen = window_state.screen;
         image = new Image(file_name, window_state.renderer);
 
-        init_src_size();
-        init_dest_size();
+        _init_src_size();
+        _init_dest_size();
         x = nx - w * 0.5;
         y = ny;
         dy = ndy;
         owner_type = owner;
     }
 
-    void init_src_size()
-    {
-        image->src.w = frame_size;
-        image->src.h = frame_size;
-    }
-
-    void init_dest_size()
-    {
-        image->scale_to_relative_size(&w, &h, window, relative_width);
-    }
-
     void refresh(long dt)
     {
         y += dy * dt * speed * screen->h;
         screen->on_resize_scale(&x, &y, &w, &h);
-        init_dest_size();
+        _init_dest_size();
     }
 
     void draw()
@@ -77,4 +66,15 @@ private:
     const char *file_name = "assets/images/bullets/player_bullet.png";
     float relative_width = 0.03;
     int frame_size = 64;
+
+    void _init_src_size()
+    {
+        image->src.w = frame_size;
+        image->src.h = frame_size;
+    }
+
+    void _init_dest_size()
+    {
+        image->scale_to_relative_size(&w, &h, window, relative_width);
+    }
 };

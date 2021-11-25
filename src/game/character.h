@@ -38,17 +38,7 @@ public:
         reload_time = config.reload;
         current_reload_time = reload_time;
         bullet_dy = config.bullet_dy;
-        init_size();
-    }
-
-    void init_size()
-    {
-        image->scale_to_relative_size(&w, &h, window_state.window, relative_width);
-    }
-
-    void draw()
-    {
-        image->draw(x, y, w, h);
+        _init_size();
     }
 
     void fire(long dt)
@@ -57,31 +47,18 @@ public:
         if (current_reload_time >= reload_time)
         {
             current_reload_time -= reload_time;
-            create_bullet();
+            _create_bullet();
         }
-    }
-
-    void create_bullet()
-    {
-        int bullet_y;
-        int bullet_x = x + w * 0.5;
-
-        if (bullet_dy < 0)
-        {
-            bullet_y = y - h * 0.55;
-        }
-
-        if (bullet_dy > 0)
-        {
-            bullet_y = y + h * 1.1;
-        }
-
-        bullet_list->add_bullet(window_state, bullet_x, bullet_y, bullet_dy, type);
     }
 
     void on_resize()
     {
         screen->on_resize_scale(&x, &y, &w, &h);
+    }
+
+    void draw()
+    {
+        image->draw(x, y, w, h);
     }
 
     bool is_colllided(Bullet *bullet)
@@ -122,4 +99,27 @@ private:
     int reload_time;
     int speed;
     long current_reload_time;
+
+    void _init_size()
+    {
+        image->scale_to_relative_size(&w, &h, window_state.window, relative_width);
+    }
+
+    void _create_bullet()
+    {
+        int bullet_y;
+        int bullet_x = x + w * 0.5;
+
+        if (bullet_dy < 0)
+        {
+            bullet_y = y - h * 0.55;
+        }
+
+        if (bullet_dy > 0)
+        {
+            bullet_y = y + h * 1.1;
+        }
+
+        bullet_list->add_bullet(window_state, bullet_x, bullet_y, bullet_dy, type);
+    }
 };

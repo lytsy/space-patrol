@@ -20,6 +20,8 @@ Character_config PLAYER_BASE_CONFIG = {
 #define PLAYER_X_SPEED 0.0003
 #define PLAYER_Y_SPEED 0.0003
 #define PLAYER_Y_OFFSET_RELATIVE 0.05
+#define PLAYER_START_HP 20
+#define HP_BARS_IN_LINE 10
 
 class Player : public Character
 {
@@ -31,14 +33,8 @@ public:
 
     void init()
     {
-        init_position();
-        hp = 20;
-    }
-
-    void init_position()
-    {
-        x = (screen->w / 2) - w / 2;
-        y = (1 - y_offset_relative) * screen->h - h;
+        _init_position();
+        hp = PLAYER_START_HP;
     }
 
     void handle_keypress(int *keyboard, long dt)
@@ -88,10 +84,25 @@ public:
     void draw()
     {
         Character::draw();
-        draw_hp();
+        _draw_hp();
     }
 
-    void draw_hp()
+private:
+    float y_offset_relative = PLAYER_Y_OFFSET_RELATIVE;
+    float x_speed = PLAYER_X_SPEED;
+    float y_speed = PLAYER_Y_SPEED;
+    int max_hp = 20;
+    float hp_bar_size_relative = 0.1;
+    SDL_Color hp_full = {0, 255, 200};
+    SDL_Color hp_empty = {122, 122, 122};
+
+    void _init_position()
+    {
+        x = (screen->w - w) / 2;
+        y = (1 - y_offset_relative) * screen->h - h;
+    }
+
+    void _draw_hp()
     {
         SDL_Rect dest;
         float size = w * hp_bar_size_relative;
@@ -100,8 +111,8 @@ public:
 
         for (int i = 0; i < max_hp; i++)
         {
-            dest.x = x + (i % 10) * size + offset;
-            dest.y = y + h + ceil(i / 10) * size + offset + offset_from_player;
+            dest.x = x + (i % HP_BARS_IN_LINE) * size + offset;
+            dest.y = y + h + ceil(i / HP_BARS_IN_LINE) * size + offset + offset_from_player;
             dest.w = size - offset;
             dest.h = size - offset;
 
@@ -117,13 +128,4 @@ public:
             SDL_RenderFillRect(renderer, &dest);
         }
     }
-
-private:
-    float y_offset_relative = PLAYER_Y_OFFSET_RELATIVE;
-    float x_speed = PLAYER_X_SPEED;
-    float y_speed = PLAYER_Y_SPEED;
-    int max_hp = 20;
-    float hp_bar_size_relative = 0.1;
-    SDL_Color hp_full = {0, 255, 200};
-    SDL_Color hp_empty = {122, 122, 122};
 };
