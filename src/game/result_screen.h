@@ -56,6 +56,8 @@ private:
     TTF_Font *font;
     Screen *screen;
     Background *background;
+    float text_x_offset_relative = 0.07;
+    float text_y_offset_relative = 0.4;
 
     void _draw_shadow()
     {
@@ -68,11 +70,11 @@ private:
     void _draw_messages()
     {
         int size, x, y;
-        size = (screen->w + screen->h) * 0.07;
+        size = (screen->w + screen->h) * text_x_offset_relative;
 
         header->scale_dest_to_width(size);
         x = _x_aligned_to_center(header);
-        y = screen->h * 0.4 - header->dest.h * 0.5;
+        y = screen->h * text_y_offset_relative - header->dest.h * 0.5;
         header->draw(x, y);
 
         x = _x_aligned_to_center(score_msg);

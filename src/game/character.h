@@ -120,6 +120,8 @@ private:
             bullet_y = y + h * 1.1;
         }
 
-        bullet_list->add_bullet(window_state, bullet_x, bullet_y, bullet_dy, type);
+        Bullet *bullet = new Bullet(window_state, bullet_x, bullet_y, bullet_dy, type);
+
+        bullet_list->add(bullet);
     }
 };

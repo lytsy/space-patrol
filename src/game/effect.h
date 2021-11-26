@@ -29,6 +29,11 @@ public:
         _init_dest_size();
     }
 
+    bool is_need_destroy()
+    {
+        return done;
+    }
+
     void draw()
     {
         _select_animation_frame();

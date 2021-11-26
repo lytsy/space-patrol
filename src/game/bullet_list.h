@@ -1,100 +1,34 @@
 #pragma once
 #include "bullet.h"
+#include "base_link_list.h"
 
-class Bullet_list
+class Bullet_list : public Base_Link_List
 {
 public:
-    Bullet *head = NULL;
+    Bullet *head = nullptr;
 
-    void add_bullet(Window_State window_state, int nx, int ny, int dy, const char *owner_type)
+    void add(Bullet *node)
     {
-        Bullet *tmp = new Bullet(window_state, nx, ny, dy, owner_type);
-        tmp->next = NULL;
-
-        if (head == NULL)
-        {
-            head = tmp;
-            return;
-        }
-
-        Bullet *current = head;
-        while (current->next != NULL)
-        {
-            current = current->next;
-        }
-        current->next = tmp;
-    }
-
-    void delete_bullet(Bullet *n)
-    {
-        Bullet *current = head;
-        Bullet *prev = NULL;
-        while (current != NULL)
-        {
-            if (current == n)
-            {
-                if (prev == NULL)
-                {
-                    head = current->next;
-                }
-                else
-                {
-                    prev->next = current->next;
-                }
-                current->destroy();
-                free(current);
-                return;
-            }
-            prev = current;
-            current = current->next;
-        }
+        add_node_to_list(node, &head);
     }
 
     void refresh_bullets_positions(long dt)
     {
-        Bullet *current = head;
-        while (current != NULL)
-        {
-            current->refresh(dt);
-            current = current->next;
-        }
+        refresh_all(head, dt);
     }
 
     void draw_bullets()
     {
-        Bullet *current = head;
-        while (current != NULL)
-        {
-            current->draw();
-            current = current->next;
-        }
+        draw_all(head);
     }
 
-    void destroy_remote_bullets()
+    void delete_remote_bullets()
     {
-        Bullet *current = head;
-        Bullet *tmp = NULL;
-        while (current != NULL)
-        {
-            tmp = current;
-            current = current->next;
-            if (tmp->is_need_destroy())
-            {
-                delete_bullet(tmp);
-            }
-        }
+        validate_and_clean(&head);
     }
 
     void destroy()
     {
-        Bullet *current = head;
-        Bullet *tmp = NULL;
-
-        while (current != NULL)
-        {
-            tmp = current;
-            current = current->next;
-            delete_bullet(tmp);
-        }
+        destroy_all(&head);
     }
 };

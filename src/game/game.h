@@ -16,21 +16,22 @@
 class Game
 {
 public:
-    Game(Window_State window_state, TTF_Font *engine_font)
+    Game(Window_State win_state, TTF_Font *engine_font)
     {
-        renderer = window_state.renderer;
-        screen = window_state.screen;
-        background = new Background(window_state);
+        window_state = win_state;
+        renderer = win_state.renderer;
+        screen = win_state.screen;
+        background = new Background(win_state);
         bullet_list = new Bullet_list();
-        enemy_list = new Enemy_list(window_state, bullet_list);
-        effect_list = new Effect_list(window_state);
-        player = new Player(window_state, bullet_list);
+        enemy_list = new Enemy_list();
+        effect_list = new Effect_list();
+        player = new Player(win_state, bullet_list);
         font = engine_font;
 
         _init_score();
         _init_level();
         _init_hints();
-        result_screen = new Result_Screen(window_state, engine_font);
+        result_screen = new Result_Screen(win_state, engine_font);
     }
 
     void handle_events(long dt, int *keyboard)
@@ -105,9 +106,11 @@ private:
     Enemy_list *enemy_list;
     Effect_list *effect_list;
     Player *player;
+    Window_State window_state;
     int score = 0;
     int score_to_win = 4;
     int level = 1;
+    int max_enemys = 4;
 
     void _refresh_game_scene(long dt)
     {
@@ -116,14 +119,15 @@ private:
         _collisions();
 
         bullet_list->refresh_bullets_positions(dt);
-        bullet_list->destroy_remote_bullets();
+        bullet_list->delete_remote_bullets();
 
-        enemy_list->refresh_enemys_positions(dt);
+        enemy_list->refresh_enemys(dt);
         enemy_list->delete_dead_enemys();
-        enemy_list->spawn_enemys();
+
+        _spawn_enemys();
 
         effect_list->refresh(dt);
-        effect_list->destroy_done();
+        effect_list->delete_done();
 
         _create_text_from_pattern(score_message, "score: %d", score);
         _create_text_from_pattern(level_message, "level: %d", level);
@@ -181,7 +185,9 @@ private:
             bool is_player_shoot = strcmp(bullet->owner_type, "player") == 0;
             if (character->is_damage_was_lethal(bullet))
             {
-                effect_list->add(character->x, character->y, character->dy);
+
+                Effect *explode = new Effect(window_state, character->x, character->y, character->dy);
+                effect_list->add(explode);
                 if (is_player_shoot)
                 {
                     score++;
@@ -241,7 +247,7 @@ private:
         }
         if (level % 3 == 0)
         {
-            enemy_list->max_length++;
+            max_enemys++;
         }
     }
 
@@ -252,5 +258,16 @@ private:
         enemy_list->destroy();
         bullet_list->destroy();
         effect_list->destroy();
+    }
+
+    void _spawn_enemys()
+    {
+        int need_add_enemys = max_enemys - enemy_list->length;
+        while (need_add_enemys > 0)
+        {
+            Enemy *enemy = new Enemy(window_state, bullet_list);
+            enemy_list->add(enemy);
+            need_add_enemys--;
+        }
     }
 };
