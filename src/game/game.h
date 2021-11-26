@@ -52,7 +52,10 @@ public:
             keyboard[SDL_SCANCODE_RETURN] = 0;
         }
 
-        player->handle_keypress(keyboard, dt);
+        if (is_play())
+        {
+            player->handle_keypress(keyboard, dt);
+        }
     }
 
     void refresh(long dt)

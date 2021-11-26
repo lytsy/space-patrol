@@ -41,12 +41,21 @@ public:
         _init_size();
     }
 
-    void fire(long dt)
+    void refresh_reload(long dt)
     {
         current_reload_time += dt;
-        if (current_reload_time >= reload_time)
+    }
+
+    bool can_strike()
+    {
+        return current_reload_time >= reload_time;
+    }
+
+    void fire()
+    {
+        if (can_strike())
         {
-            current_reload_time -= reload_time;
+            current_reload_time = 0;
             _create_bullet();
         }
     }

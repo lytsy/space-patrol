@@ -1,4 +1,5 @@
 
+#pragma once
 #define SDL_MAIN_HANDLED
 #include "../../vendor/sdl/include/SDL2/SDL.h"
 #include "../../vendor/sdl_mixer/include/SDL2/SDL_mixer.h"

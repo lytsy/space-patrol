@@ -37,7 +37,8 @@ public:
         on_resize();
         y += dy * dt * y_speed * screen->h;
         x += dx * dt * x_speed * screen->w;
-        fire(dt);
+        refresh_reload(dt);
+        fire();
     }
 
 private:

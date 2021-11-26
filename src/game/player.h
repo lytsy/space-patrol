@@ -1,5 +1,6 @@
 
 #pragma once
+#include "../media_types/sound.h"
 #include "character.h"
 
 // Base class config
@@ -28,6 +29,7 @@ class Player : public Character
 public:
     Player(Window_State window_state, Bullet_list *list) : Character(window_state, list, PLAYER_BASE_CONFIG)
     {
+        strike_sound = new Sound(strike_sound_file_name);
         init();
     }
 
@@ -60,7 +62,7 @@ public:
         }
         if (keyboard[SDL_SCANCODE_SPACE] == 1)
         {
-            fire(dt);
+            fire();
         }
     }
 
@@ -79,12 +81,29 @@ public:
         {
             y = new_y;
         }
+
+        refresh_reload(dt);
     }
 
     void draw()
     {
         Character::draw();
         _draw_hp();
+    }
+
+    void fire()
+    {
+        if (can_strike())
+        {
+            Character::fire();
+            strike_sound->play();
+        }
+    }
+
+    void destroy()
+    {
+        Character::destroy();
+        strike_sound->destroy();
     }
 
 private:
@@ -95,6 +114,8 @@ private:
     float hp_bar_size_relative = 0.1;
     SDL_Color hp_full = {0, 255, 200};
     SDL_Color hp_empty = {122, 122, 122};
+    Sound *strike_sound;
+    const char *strike_sound_file_name = "assets/sounds/strike.mp3";
 
     void _init_position()
     {

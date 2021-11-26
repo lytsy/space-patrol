@@ -1,15 +1,10 @@
 
 #include "engine/engine.h"
-#include "media_types/sound.h"
 #include "game/game.h"
 
 int main(int argc, char **argv)
 {
     engine.init();
-
-    Sound test_sound("assets/sound.mp3");
-    test_sound.play();
-
     Game *game = new Game(engine.window_state, engine.font);
 
     while (engine.running)
@@ -35,7 +30,6 @@ int main(int argc, char **argv)
         SDL_Delay(5);
     }
 
-    test_sound.destroy();
     game->destroy();
     engine.destroy();
     return 0;
