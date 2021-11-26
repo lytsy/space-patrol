@@ -47,6 +47,7 @@ public:
 
         if (_is_defeat() && keyboard[SDL_SCANCODE_RETURN] == 1)
         {
+            level = 0;
             _reset_level();
             keyboard[SDL_SCANCODE_RETURN] = 0;
         }
