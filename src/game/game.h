@@ -28,6 +28,8 @@ public:
         player = new Player(win_state, bullet_list);
         font = engine_font;
 
+        explode_image = new Image(explode_file_name, renderer);
+
         _init_score();
         _init_level();
         _init_hints();
@@ -91,6 +93,7 @@ public:
         player->destroy();
         enemy_list->destroy();
         bullet_list->destroy();
+        explode_image->destroy();
     }
 
 private:
@@ -107,6 +110,8 @@ private:
     Effect_list *effect_list;
     Player *player;
     Window_State window_state;
+    Image *explode_image;
+    const char *explode_file_name = "assets/images/effects/effect.png";
     int score = 0;
     int score_to_win = 4;
     int level = 1;
@@ -186,7 +191,7 @@ private:
             if (character->is_damage_was_lethal(bullet))
             {
 
-                Effect *explode = new Effect(window_state, character->x, character->y, character->dy);
+                Effect *explode = new Effect(window_state, explode_image, character->x, character->y, character->dy);
                 effect_list->add(explode);
                 if (is_player_shoot)
                 {

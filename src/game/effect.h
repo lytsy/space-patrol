@@ -8,11 +8,11 @@ public:
     Effect *next;
     bool done = false;
 
-    Effect(Window_State window_state, int nx, int ny, int ndy)
+    Effect(Window_State window_state, Image *explode_image, int nx, int ny, int ndy)
     {
         window = window_state.window;
         screen = window_state.screen;
-        image = new Image(file_name, window_state.renderer);
+        image = explode_image;
 
         _init_src_size();
         _init_dest_size();
@@ -40,10 +40,7 @@ public:
         image->draw(x, y, w, h);
     }
 
-    void destroy()
-    {
-        image->destroy();
-    }
+    void destroy() {}
 
 private:
     SDL_Window *window;
