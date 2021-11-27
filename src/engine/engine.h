@@ -47,15 +47,16 @@ class Engine
 public:
     SDL_Renderer *renderer;
     SDL_Window *window;
-    TTF_Font *font;
     SDL_Surface *icon_surface;
+    TTF_Font *font;
+    Text *fps_message;
+    Screen screen;
+    Window_State window_state;
     bool running;
     long dt = 0;
     int fps = 0;
-    Text *fps_message;
     int keyboard[SDL_NUM_SCANCODES] = {0};
-    Screen screen;
-    Window_State window_state;
+    Mouse *mouse;
 
     void init()
     {
@@ -72,6 +73,7 @@ public:
         _init_fps_message();
         _init_screen();
         _init_window_state();
+        mouse = new Mouse();
     }
 
     void destroy()
@@ -83,11 +85,12 @@ public:
         _destroy_sdl_image();
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
+        free(mouse);
     }
 
     void handle_events()
     {
-        SDL_events(&running, keyboard);
+        SDL_events(&running, keyboard, mouse);
     }
 
     void render_clear()

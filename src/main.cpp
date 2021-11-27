@@ -17,7 +17,7 @@ int main(int argc, char **argv)
         engine.count_fps();
         engine.refresh_screen();
 
-        game->handle_events(engine.dt, engine.keyboard);
+        game->handle_events(engine.dt, engine.keyboard, engine.mouse);
         game->refresh(engine.dt);
 
         game->draw();

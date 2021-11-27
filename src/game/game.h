@@ -5,6 +5,7 @@
 #include "effect_list.h"
 #include "player.h"
 #include "result_screen.h"
+#include "start_screen.h"
 
 #define MESSAGES_OFFSET_RELATIVE 0.01
 #define VICTORY_MESSAGE "Victory"
@@ -34,10 +35,17 @@ public:
         _init_level();
         _init_hints();
         result_screen = new Result_Screen(win_state, engine_font);
+        start_screen = new Start_Screen(win_state, engine_font);
     }
 
-    void handle_events(long dt, int *keyboard)
+    void handle_events(long dt, int *keyboard, Mouse *mouse)
     {
+        if (start_screen_on)
+        {
+            start_screen->handle_events(keyboard, mouse, &start_screen_on);
+            return;
+        }
+
         if (_is_win() && keyboard[SDL_SCANCODE_RETURN] == 1)
         {
             _next_level();
@@ -60,6 +68,11 @@ public:
 
     void refresh(long dt)
     {
+        if (start_screen_on)
+        {
+            return;
+        }
+
         if (_is_win())
         {
             result_screen->refresh(VICTORY_MESSAGE, score, VICTORY_TIP);
@@ -77,6 +90,12 @@ public:
 
     void draw()
     {
+        if (start_screen_on)
+        {
+            start_screen->draw();
+            return;
+        }
+
         if (_is_win() || _is_defeat())
         {
             result_screen->draw();
@@ -88,7 +107,7 @@ public:
 
     bool is_play()
     {
-        return !_is_win() && !_is_defeat();
+        return !_is_win() && !_is_defeat() && !start_screen_on;
     }
 
     void destroy()
@@ -108,6 +127,7 @@ private:
     SDL_Renderer *renderer;
     Screen *screen;
     Result_Screen *result_screen;
+    Start_Screen *start_screen;
     Background *background;
     Bullet_list *bullet_list;
     Enemy_list *enemy_list;
@@ -116,6 +136,7 @@ private:
     Window_State window_state;
     Image *explode_image;
     const char *explode_file_name = "assets/images/effects/effect.png";
+    bool start_screen_on = true;
     int score = 0;
     int score_to_win = 4;
     int level = 1;
