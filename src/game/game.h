@@ -31,9 +31,11 @@ public:
 
         explode_image = new Image(explode_file_name, renderer);
 
-        _init_score();
-        _init_level();
-        _init_hints();
+        _init_text(&score_message, "_", text_color);
+        _init_text(&total_score_message, "_", text_color);
+        _init_text(&level_message, "_", text_color);
+        _init_text(&hints, HINTS_MESSAGE, hints_color);
+        _refresh_hints_position();
         result_screen = new Result_Screen(win_state, engine_font);
         start_screen = new Start_Screen(win_state, engine_font);
     }
@@ -55,7 +57,7 @@ public:
 
         if (_is_defeat() && keyboard[SDL_SCANCODE_RETURN] == 1)
         {
-            level = 0;
+            _reset_game();
             _reset_level();
             keyboard[SDL_SCANCODE_RETURN] = 0;
         }
@@ -75,13 +77,13 @@ public:
 
         if (_is_win())
         {
-            result_screen->refresh(VICTORY_MESSAGE, score, VICTORY_TIP);
+            result_screen->refresh(VICTORY_MESSAGE, score, total_score, VICTORY_TIP);
             return;
         }
 
         if (_is_defeat())
         {
-            result_screen->refresh(DEFEAT_MESSAGE, score, DEFEAT_TIP);
+            result_screen->refresh(DEFEAT_MESSAGE, score, total_score, DEFEAT_TIP);
             return;
         }
 
@@ -121,6 +123,7 @@ public:
 
 private:
     Text *score_message;
+    Text *total_score_message;
     Text *level_message;
     Text *hints;
     TTF_Font *font;
@@ -135,10 +138,13 @@ private:
     Player *player;
     Window_State window_state;
     Image *explode_image;
+    SDL_Color text_color = {70, 255, 70, 0};
+    SDL_Color hints_color = {100, 200, 100, 0};
     const char *explode_file_name = "assets/images/effects/effect.png";
     bool start_screen_on = true;
     int score = 0;
     int score_to_win = 4;
+    int total_score = 0;
     int level = 1;
     int max_enemys = 4;
 
@@ -159,8 +165,9 @@ private:
         effect_list->refresh(dt);
         effect_list->delete_done();
 
-        _create_text_from_pattern(score_message, "score: %d", score);
+        _create_text_from_pattern(total_score_message, "total score: %d", total_score);
         _create_text_from_pattern(level_message, "level: %d", level);
+        _create_text_from_pattern(score_message, "level score: %d", score);
         _refresh_hints_position();
     }
 
@@ -172,8 +179,9 @@ private:
         bullet_list->draw_bullets();
         player->draw();
         effect_list->draw();
-        _draw_line(level_message, 0);
-        _draw_line(score_message, 1);
+        _draw_line(total_score_message, 0);
+        _draw_line(level_message, 1);
+        _draw_line(score_message, 2);
     }
 
     bool _is_win()
@@ -220,29 +228,17 @@ private:
                 effect_list->add(explode);
                 if (is_player_shoot)
                 {
-                    score++;
+                    _increase_score();
                 }
             }
         }
     }
 
-    void _init_score()
+    void _init_text(Text **text, const char *msg, SDL_Color color)
     {
-        score_message = new Text("score: ", renderer, font);
-        score_message->color = {70, 255, 70, 0};
-    }
-
-    void _init_level()
-    {
-        level_message = new Text("level: ", renderer, font);
-        level_message->color = {70, 255, 70, 0};
-    }
-
-    void _init_hints()
-    {
-        hints = new Text(HINTS_MESSAGE, renderer, font);
-        hints->set_color(100, 200, 100, 0);
-        _refresh_hints_position();
+        *text = new Text(msg, renderer, font);
+        Text *tmp = *text;
+        tmp->set_color(color.r, color.g, color.b, color.a);
     }
 
     void _refresh_hints_position()
@@ -288,6 +284,18 @@ private:
         enemy_list->destroy();
         bullet_list->destroy();
         effect_list->destroy();
+    }
+
+    void _increase_score()
+    {
+        score++;
+        total_score++;
+    }
+
+    void _reset_game()
+    {
+        level = 0;
+        total_score = 0;
     }
 
     void _spawn_enemys()

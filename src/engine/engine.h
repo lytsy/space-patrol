@@ -11,7 +11,7 @@
 #include "console.h"
 #include "events.h"
 
-#define FPS_MESSAGE_LINE_POSITION 2
+#define FPS_MESSAGE_LINE_POSITION 3
 #define MESSAGES_OFFSET_RELATIVE 0.01
 
 class Screen
