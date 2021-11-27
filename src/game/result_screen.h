@@ -3,6 +3,7 @@
 #include "../engine/engine.h"
 #include "background.h"
 
+#define RESULT_BACKGROUND_FILE "assets/images/backgrounds/bg_1.jpg"
 #define TOTAL_SCORE_PATTERN "Total score: %d"
 #define LEVEL_SCORE_PATTERN "Level score: %d"
 
@@ -16,7 +17,7 @@ public:
         font = engine_font;
         screen = window_state.screen;
 
-        background = new Background(window_state);
+        background = new Background(window_state, RESULT_BACKGROUND_FILE);
         background->speed = 0.0;
 
         _init_text(&header, "_", header_color);
@@ -59,7 +60,7 @@ private:
     void _draw_shadow()
     {
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(renderer, 121, 67, 87, 80);
+        SDL_SetRenderDrawColor(renderer, 60, 33, 43, 80);
         SDL_RenderFillRect(renderer, NULL);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     }

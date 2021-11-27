@@ -7,7 +7,8 @@
 #include "result_screen.h"
 #include "start_screen.h"
 
-#define MESSAGES_OFFSET_RELATIVE 0.01
+#define GAME_BACKGROUND_FILE "assets/images/backgrounds/bg_0.jpg"
+#define MESSAGES_LEFT_OFFSET_RELATIVE 0.01
 #define VICTORY_MESSAGE "Victory"
 #define VICTORY_TIP "Press Enter to start next level."
 #define DEFEAT_MESSAGE "Defeat"
@@ -22,7 +23,7 @@ public:
         window_state = win_state;
         renderer = win_state.renderer;
         screen = win_state.screen;
-        background = new Background(win_state);
+        background = new Background(win_state, GAME_BACKGROUND_FILE);
         bullet_list = new Bullet_list();
         enemy_list = new Enemy_list();
         effect_list = new Effect_list();
@@ -259,7 +260,7 @@ private:
 
     void _draw_line(Text *text, int line)
     {
-        int message_x = (1 - MESSAGES_OFFSET_RELATIVE) * screen->w - text->dest.w;
+        int message_x = (1 - MESSAGES_LEFT_OFFSET_RELATIVE) * screen->w - text->dest.w;
         int message_y = text->dest.h * line;
         text->draw(message_x, message_y);
     }

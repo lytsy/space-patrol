@@ -4,6 +4,8 @@
 #include "../engine/collider.h"
 #include "background.h"
 
+#define START_SCREEN_BACKGROUND_FILE "assets/images/backgrounds/bg_1.jpg"
+
 class Start_Screen
 {
 public:
@@ -13,7 +15,7 @@ public:
         font = engine_font;
         screen = window_state.screen;
 
-        background = new Background(window_state);
+        background = new Background(window_state, START_SCREEN_BACKGROUND_FILE);
         background->speed = 0.0;
 
         button_text = new Text(start_button_message, renderer, font);
