@@ -6,14 +6,16 @@
 #include "player.h"
 #include "result_screen.h"
 #include "start_screen.h"
+#include "info_vidget.h"
 
 #define GAME_BACKGROUND_FILE "assets/images/backgrounds/bg_0.jpg"
-#define MESSAGES_LEFT_OFFSET_RELATIVE 0.01
+#define EXPLODE_SPRITE "assets/images/effects/effect.png"
 #define VICTORY_MESSAGE "Victory"
 #define VICTORY_TIP "Press Enter to start next level."
 #define DEFEAT_MESSAGE "Defeat"
 #define DEFEAT_TIP "Press Enter to restart level."
-#define HINTS_MESSAGE "move(arrows) fire(space) "
+#define INITIAL_MAX_ENEMYS 4
+#define INITIAL_SCORE_TO_WIN 10
 
 class Game
 {
@@ -23,20 +25,14 @@ public:
         window_state = win_state;
         renderer = win_state.renderer;
         screen = win_state.screen;
+
         background = new Background(win_state, GAME_BACKGROUND_FILE);
         bullet_list = new Bullet_list();
         enemy_list = new Enemy_list();
         effect_list = new Effect_list();
         player = new Player(win_state, bullet_list);
-        font = engine_font;
-
         explode_image = new Image(explode_file_name, renderer);
-
-        _init_text(&score_message, "_", text_color);
-        _init_text(&total_score_message, "_", text_color);
-        _init_text(&level_message, "_", text_color);
-        _init_text(&hints, HINTS_MESSAGE, hints_color);
-        _refresh_hints_position();
+        info_vidget = new Info_Vidget(win_state, engine_font);
         result_screen = new Result_Screen(win_state, engine_font);
         start_screen = new Start_Screen(win_state, engine_font);
     }
@@ -123,11 +119,6 @@ public:
     }
 
 private:
-    Text *score_message;
-    Text *total_score_message;
-    Text *level_message;
-    Text *hints;
-    TTF_Font *font;
     SDL_Renderer *renderer;
     Screen *screen;
     Result_Screen *result_screen;
@@ -139,15 +130,15 @@ private:
     Player *player;
     Window_State window_state;
     Image *explode_image;
-    SDL_Color text_color = {70, 255, 70, 0};
-    SDL_Color hints_color = {100, 200, 100, 0};
-    const char *explode_file_name = "assets/images/effects/effect.png";
+    Info_Vidget *info_vidget;
+    const char *explode_file_name = EXPLODE_SPRITE;
     bool start_screen_on = true;
     int score = 0;
-    int score_to_win = 4;
+    int score_to_win = INITIAL_SCORE_TO_WIN;
+    int score_to_win_level_step = 2;
     int total_score = 0;
     int level = 1;
-    int max_enemys = 4;
+    int max_enemys = INITIAL_MAX_ENEMYS;
 
     void _refresh_game_scene(long dt)
     {
@@ -160,29 +151,22 @@ private:
 
         enemy_list->refresh_enemys(dt);
         enemy_list->delete_dead_enemys();
-
         _spawn_enemys();
 
         effect_list->refresh(dt);
         effect_list->delete_done();
 
-        _create_text_from_pattern(total_score_message, "total score: %d", total_score);
-        _create_text_from_pattern(level_message, "level: %d", level);
-        _create_text_from_pattern(score_message, "level score: %d", score);
-        _refresh_hints_position();
+        info_vidget->refresh(level, total_score, score);
     }
 
     void _draw_game_scene()
     {
         background->draw();
-        hints->draw();
         enemy_list->draw_enemys();
         bullet_list->draw_bullets();
+        info_vidget->draw();
         player->draw();
         effect_list->draw();
-        _draw_line(total_score_message, 0);
-        _draw_line(level_message, 1);
-        _draw_line(score_message, 2);
     }
 
     bool _is_win()
@@ -235,42 +219,12 @@ private:
         }
     }
 
-    void _init_text(Text **text, const char *msg, SDL_Color color)
-    {
-        *text = new Text(msg, renderer, font);
-        Text *tmp = *text;
-        tmp->set_color(color.r, color.g, color.b, color.a);
-    }
-
-    void _refresh_hints_position()
-    {
-        hints->dest.y = screen->h - hints->dest.h * 1.2;
-        hints->dest.x = screen->w - hints->dest.w;
-    }
-
-    void _create_text_from_pattern(Text *text, const char *pattern, int number)
-    {
-        int length = snprintf(NULL, 0, pattern, number);
-        char *str = (char *)malloc(length + 1);
-        snprintf(str, length + 1, pattern, number);
-
-        text->set_message(str);
-        free(str);
-    }
-
-    void _draw_line(Text *text, int line)
-    {
-        int message_x = (1 - MESSAGES_LEFT_OFFSET_RELATIVE) * screen->w - text->dest.w;
-        int message_y = text->dest.h * line;
-        text->draw(message_x, message_y);
-    }
-
     void _next_level()
     {
         level++;
         if (level % 2 == 0)
         {
-            score_to_win++;
+            score_to_win += score_to_win_level_step;
         }
         if (level % 3 == 0)
         {
@@ -295,8 +249,10 @@ private:
 
     void _reset_game()
     {
-        level = 0;
+        level = 1;
         total_score = 0;
+        score_to_win = INITIAL_SCORE_TO_WIN;
+        max_enemys = INITIAL_MAX_ENEMYS;
     }
 
     void _spawn_enemys()
