@@ -3,31 +3,22 @@
 #include "../media_types/sound.h"
 #include "character.h"
 
-// Base class config
-#define PLAYER_SPRITE_FILE "assets/images/player/player.png"
-#define PLAYER_RELATIVE_WIDTH 0.1
-#define PLAYER_RELOAD_TIME 300
-#define PLAYER_BULLET_DY -1
-#define PLAYER_TYPE "player"
-
-Character_config PLAYER_BASE_CONFIG = {
-    PLAYER_SPRITE_FILE,
-    PLAYER_TYPE,
-    PLAYER_RELATIVE_WIDTH,
-    PLAYER_RELOAD_TIME,
-    PLAYER_BULLET_DY};
-
-// Player config
-#define PLAYER_X_SPEED 0.0003
-#define PLAYER_Y_SPEED 0.0003
-#define PLAYER_Y_OFFSET_RELATIVE 0.05
-#define PLAYER_START_HP 20
-#define HP_BARS_IN_LINE 10
+Character_config player_config =
+    {
+        .file = "assets/images/player/player.png",
+        .type = "player",
+        .relative_width = 0.1,
+        .reload = 300,
+        .bullet_dy = -1,
+        .hp = 20,
+        .x_speed = 0.0003,
+        .y_speed = 0.0003,
+};
 
 class Player : public Character
 {
 public:
-    Player(Window_State window_state, Bullet_list *list) : Character(window_state, list, PLAYER_BASE_CONFIG)
+    Player(Window_State window_state, Bullet_list *list, Character_config cfg) : Character(window_state, list, cfg)
     {
         strike_sound = new Sound(strike_sound_file_name);
         init();
@@ -36,7 +27,7 @@ public:
     void init()
     {
         _init_position();
-        hp = PLAYER_START_HP;
+        hp = initial_hp;
     }
 
     void handle_keypress(int *keyboard, long dt)
@@ -107,20 +98,19 @@ public:
     }
 
 private:
-    float y_offset_relative = PLAYER_Y_OFFSET_RELATIVE;
-    float x_speed = PLAYER_X_SPEED;
-    float y_speed = PLAYER_Y_SPEED;
-    int max_hp = 20;
-    float hp_bar_size_relative = 0.1;
+    const char *strike_sound_file_name = "assets/sounds/strike.mp3";
     SDL_Color hp_full = {0, 255, 200};
     SDL_Color hp_empty = {122, 122, 122};
     Sound *strike_sound;
-    const char *strike_sound_file_name = "assets/sounds/strike.mp3";
+    float intitial_y_offset_relative = 0.05;
+    float hp_bar_size_relative = 0.1;
+    int hp_bars_in_line = 10;
+    int max_hp = 20;
 
     void _init_position()
     {
         x = (screen->w - w) / 2;
-        y = (1 - y_offset_relative) * screen->h - h;
+        y = (1 - intitial_y_offset_relative) * screen->h - h;
     }
 
     void _draw_hp()
@@ -132,8 +122,8 @@ private:
 
         for (int i = 0; i < max_hp; i++)
         {
-            dest.x = x + (i % HP_BARS_IN_LINE) * size + offset;
-            dest.y = y + h + ceil(i / HP_BARS_IN_LINE) * size + offset + offset_from_player;
+            dest.x = x + (i % hp_bars_in_line) * size + offset;
+            dest.y = y + h + ceil(i / hp_bars_in_line) * size + offset + offset_from_player;
             dest.w = size - offset;
             dest.h = size - offset;
 

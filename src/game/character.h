@@ -4,22 +4,26 @@
 #include "bullet_list.h"
 #include "../engine/collider.h"
 
-class Character_config
+typedef struct
 {
-public:
     const char *file;
     const char *type;
     float relative_width;
     int reload;
     int bullet_dy;
-};
+    int hp;
+    float x_speed;
+    float y_speed;
+} Character_config;
 
 class Character
 {
 public:
     int x, y, w, h;
     int dx, dy;
-    int hp, damage;
+    int hp, initial_hp, damage;
+    float x_speed;
+    float y_speed;
     Image *image;
     Screen *screen;
     SDL_Renderer *renderer;
@@ -38,6 +42,10 @@ public:
         reload_time = config.reload;
         current_reload_time = reload_time;
         bullet_dy = config.bullet_dy;
+        hp = config.hp;
+        initial_hp = config.hp;
+        x_speed = config.x_speed;
+        y_speed = config.y_speed;
         _init_size();
     }
 
@@ -103,11 +111,11 @@ private:
     Window_State window_state;
     SDL_Window *window;
     Bullet_list *bullet_list;
-    int bullet_dy;
-    float relative_width;
+    long current_reload_time;
     int reload_time;
     int speed;
-    long current_reload_time;
+    int bullet_dy;
+    float relative_width;
 
     void _init_size()
     {

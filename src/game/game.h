@@ -30,7 +30,7 @@ public:
         bullet_list = new Bullet_list();
         enemy_list = new Enemy_list();
         effect_list = new Effect_list();
-        player = new Player(win_state, bullet_list);
+        player = new Player(win_state, bullet_list, player_config);
         explode_image = new Image(explode_file_name, renderer);
         info_vidget = new Info_Vidget(win_state, engine_font);
         result_screen = new Result_Screen(win_state, engine_font);
@@ -260,7 +260,8 @@ private:
         int need_add_enemys = max_enemys - enemy_list->length;
         while (need_add_enemys > 0)
         {
-            Enemy *enemy = new Enemy(window_state, bullet_list);
+            int enemy_type_index = rand() % ENEMY_TYPES;
+            Enemy *enemy = new Enemy(window_state, bullet_list, enemy_configs[enemy_type_index]);
             enemy_list->add(enemy);
             need_add_enemys--;
         }
