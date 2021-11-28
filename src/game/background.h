@@ -7,7 +7,7 @@
 class Background
 {
 public:
-    float speed = 0.1;
+    float speed = 0.07;
 
     Background(Window_State window_state, const char *file)
     {
@@ -55,5 +55,6 @@ private:
     Image *image;
     SDL_Window *window;
     Screen *screen;
-    int x, y, w, h;
+    int w, h;
+    float x, y;
 };
