@@ -14,6 +14,7 @@ public:
         screen = window_state.screen;
         image = explode_image;
 
+        relative_width = (rand() % 3 + 8) * 0.01;
         _init_src_size();
         _init_dest_size();
         x = nx;
@@ -51,7 +52,7 @@ private:
     int x, y, w, h;
     int dy;
     float speed = 0.0002;
-    float relative_width = 0.1;
+    float relative_width;
     int frame_size = 341;
     long time = 0;
     int animation_step_time = 50;
