@@ -3,6 +3,7 @@
 #define SDL_MAIN_HANDLED
 #include "../../vendor/sdl/include/SDL2/SDL.h"
 #include "../../vendor/sdl_ttf/include/SDL2/SDL_ttf.h"
+#include <string.h>
 #include <stdio.h>
 
 class Text
@@ -22,6 +23,11 @@ public:
 
     void set_message(const char *msg)
     {
+        if (strcmp(message, msg) == 0)
+        {
+            return;
+        }
+
         message = (char *)msg;
         _init_texture();
         _init_dest();

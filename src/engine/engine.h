@@ -134,7 +134,7 @@ public:
 
     void draw_fps()
     {
-        _refresh_fps_message_text();
+        _create_text_from_pattern(fps_message, "fps %d", fps);
         _refresh_fps_message_position();
         fps_message->draw();
     }
@@ -254,17 +254,20 @@ private:
         window_state.screen = &screen;
     }
 
-    void _refresh_fps_message_text()
-    {
-        char fps_text[20];
-        sprintf(fps_text, "fps %d", fps);
-        fps_message->set_message(fps_text);
-    }
-
     void _refresh_fps_message_position()
     {
         fps_message->dest.x = (1 - MESSAGES_OFFSET_RELATIVE) * screen.w - fps_message->dest.w;
         fps_message->dest.y = FPS_MESSAGE_LINE_POSITION * fps_message->dest.h;
+    }
+
+    void _create_text_from_pattern(Text *text, const char *pattern, int number)
+    {
+        int length = snprintf(NULL, 0, pattern, number);
+        char *str = (char *)malloc(length + 1);
+        snprintf(str, length + 1, pattern, number);
+
+        text->set_message(str);
+        free(str);
     }
 
     void _destroy_sdl_image()
