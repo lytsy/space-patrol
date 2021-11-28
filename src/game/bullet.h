@@ -18,7 +18,15 @@ public:
     {
         window = window_state.window;
         screen = window_state.screen;
-        image = new Image(file_name, window_state.renderer);
+
+        if (strcmp(owner, "player") == 0)
+        {
+            image = new Image(player_bullet_sprite, window_state.renderer);
+        }
+        else
+        {
+            image = new Image(enemy_bullet_sprite, window_state.renderer);
+        }
 
         _init_src_size();
         _init_dest_size();
@@ -63,7 +71,8 @@ public:
 private:
     SDL_Window *window;
     float speed = 0.0008;
-    const char *file_name = "assets/images/bullets/player_bullet.png";
+    const char *player_bullet_sprite = "assets/images/bullets/player_bullet.png";
+    const char *enemy_bullet_sprite = "assets/images/bullets/enemy_bullet.png";
     float relative_width = 0.03;
     int frame_size = 64;
 
